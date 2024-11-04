@@ -1,16 +1,25 @@
+"use client";
 
-import { useRouter } from 'next/router';
-interface Params {
-    id: string;
-  }
-const DynamicPage = ({ params }: { params: Params }) => {
+import * as React from "react";
+import { Calendar } from "@/components/ui/calendar";
 
-  const { id } = params;
+const DynamicPage = ({ params }: { params: { id: string } }) => {
+  const { id } = params; // Accessing the dynamic parameter directly
+
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
-    <div>
-    
-      <p>User ID : {id}</p>
+    <div className="flex flex-col items-center">
+      <p>User ID: {id}</p>
+      <br />
+      <div className="w-full max-w-md">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          className="rounded-md border shadow w-full"
+        />
+      </div>
     </div>
   );
 };
