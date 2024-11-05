@@ -3,8 +3,8 @@
 import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
 
-const DynamicPage = ({ params }: { params: { id: string } }) => {
-  const { id } = params; // Accessing the dynamic parameter directly
+const DynamicPage = ({ params }: { params: { id: string } | any }) => {
+  const { id } = params as { id: string }; // Typecasting params directly
 
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
@@ -23,6 +23,5 @@ const DynamicPage = ({ params }: { params: { id: string } }) => {
     </div>
   );
 };
-
 
 export default DynamicPage;
