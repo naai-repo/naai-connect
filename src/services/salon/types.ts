@@ -3,12 +3,14 @@
 export type SingleSalonResponseType = {
   status: string;
   message: string;
-  data: {
-    data: SingleSalonDataType;
-    artists: SingleSlonArtistDataType[];
-    services: SingleSalonServiceDataType[];
-  };
+  data: salonData
 };
+
+export type salonData = {
+  data: SingleSalonDataType;
+  artists: SingleSlonArtistDataType[];
+  services: SingleSalonServiceDataType[];
+}
 
 type SingleSalonDataType = {
   location: Location;

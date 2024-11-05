@@ -2,7 +2,7 @@ import Salons from "@/services/salon/salon";
 import { SingleSalonResponseControllerType } from "./types";
 import { errorResponse, successResponse } from "@/services/responseWrapper";
 
-export function useAuthServices() {
+export function useSalonService() {
   const getSalonDataById = async (salonId:string): Promise<SingleSalonResponseControllerType> => {
     try {
       let res = await Salons.getSalonDataById(salonId);

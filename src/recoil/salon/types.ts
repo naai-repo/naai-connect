@@ -1,5 +1,6 @@
-import { SingleSalonResponseType } from "@/services/salon/types";
+import { salonData, SingleSalonResponseType } from "@/services/salon/types";
 
 export type SalonAtomType = {
-  singleSalonData : SingleSalonResponseType;
+  singleSalonData : salonData;
+  isOverLayLoading:boolean
 }
