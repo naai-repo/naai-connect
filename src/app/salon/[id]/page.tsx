@@ -2,9 +2,12 @@
 
 import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
+import { useParams } from "next/navigation";
 
-const DynamicPage = ({ params }: { params: { id: string } }) => {
-  const { id } = params; // Accessing the dynamic parameter directly
+const DynamicPage = () => {
+  
+  const params = useParams();
+  const id = params?.id as string | null;
 
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
