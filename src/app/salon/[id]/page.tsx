@@ -1,12 +1,18 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import { useParams } from "next/navigation";
 
-const DynamicPage = ({ params }: { params: { id: string } | any }) => {
-  const { id } = params as { id: string }; // Typecasting params directly
+const DynamicPage = () => {
+  const params = useParams();
+  const id = params?.id as string | null;
 
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
+  if (!id) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col items-center">
