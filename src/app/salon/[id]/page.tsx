@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { salonLoading, singleSalonDataSelector } from "@/recoil/salon.atom";
-import { useSalonService } from "@/hooks/salonHooks";
+import { useSalonService } from "@/hooks/salon.hooks";
+import MainWrapper from "@/components/mainWrapper/mainWrapper";
+import Hero from "./comonents/hero";
 
 const DynamicPage = () => {
   const params = useParams();
@@ -11,7 +13,6 @@ const DynamicPage = () => {
   const salonService = useSalonService();
   const [salonData,setSalonData] = useRecoilState(singleSalonDataSelector);
   const [loading,setLoading] = useRecoilState(salonLoading);
-  const [date, setDate] = useState<Date | undefined>(new Date());
 
   if (!id) {
     return <div>Loading...</div>;
@@ -33,13 +34,15 @@ const DynamicPage = () => {
   },[id])
 
   return (
-    <div className="flex flex-col items-center">
-      <p>User ID: {id}</p>
-      <br />
-      <div className="w-full max-w-md">
-        
+    <MainWrapper name="Salon" parentWrapper={{
+      className : "flex flex-col sm:gap-4 sm:py-4 sm:pl-14 h-full"
+    }} mainWrapper={{
+      className : "grid flex-1 items-start gap-4 p-2 sm:px-6 sm:py-0 md:gap-8 h-full w-full"
+    }}>
+      <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10">
+        <Hero/>
       </div>
-    </div>
+    </MainWrapper>
   );
 };
 

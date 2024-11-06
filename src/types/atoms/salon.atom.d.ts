@@ -1,4 +1,5 @@
 declare type SalonAtomType = {
   singleSalonData : salonData;
-  isOverLayLoading:boolean
+  isOverLayLoading:boolean;
+  isOpen:boolean
 }

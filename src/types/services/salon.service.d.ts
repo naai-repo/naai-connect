@@ -12,7 +12,7 @@ declare type salonData = {
   services: SingleSalonServiceDataType[];
 }
 
-type SingleSalonDataType = {
+declare type SingleSalonDataType = {
   location: Location;
   timing: Timing;
   discountTime: DiscountTime;

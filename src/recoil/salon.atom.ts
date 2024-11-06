@@ -23,6 +23,20 @@ export const singleSalonDataSelector = selector<salonData | undefined>({
   },
 });
 
+export const isSalonOpenSelector = selector<boolean>({
+  key:"isSalonOpenSelector",
+  get:({get})=>{
+    const salonData = get(salonAtom);
+    return salonData.isOpen ?? false;
+  },
+  set:({set},val)=>{
+    set(salonAtom,(prev)=>({
+      ...prev,
+      isOpen:val as boolean
+    }))
+  }
+})
+
 export const salonLoading = selector<boolean>({
   key:"salonLoading",
   get: ({ get }) => {
