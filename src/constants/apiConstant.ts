@@ -5,4 +5,3 @@ export default class API_CONSTANTS {
   static getSalonDataById = this.BASE_URL+"/partner/salon/single/<SALON_ID>";
 
 }
-
