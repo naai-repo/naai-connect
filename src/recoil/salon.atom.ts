@@ -49,4 +49,13 @@ export const salonLoading = selector<boolean>({
       isOverLayLoading:val as boolean
     }))
   }
+});
+
+// service selector
+export const serviceSelector = selector({
+  key:"serviceSelector",
+  get:({get})=>{
+    const salonData = get(salonAtom);
+    return salonData?.singleSalonData?.services ?? [];
+  }
 })

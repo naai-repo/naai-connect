@@ -1,12 +1,9 @@
-import React from 'react'
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
+  CarouselItem
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 type ImagesType = {
   key: string;
@@ -18,7 +15,7 @@ const ImageCarousel = ({images}:{images?:ImagesType[]}) => {
   return (
     <Carousel  plugins={[
       Autoplay({
-        delay: 4000,
+        delay: 5000,
       }),
     ]}>
       <CarouselContent>

@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import ImageCarousel from './ImageCarousel'
 import StarRating from '@/components/rating/Rating'
+import Services from './Services'
 
 
 const Hero = () => {
@@ -63,8 +64,8 @@ const Hero = () => {
   };
 
   return (
-    <div className='w-full p-5 flex flex-col gap-3'>
-      <div className='flex flex-col gap-2'>
+    <div className='w-full p-5 pt-0 pb-0 flex flex-col'>
+      <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-14 md:top-0 bg-[#fbfbfb] z-30'>
         <div className='flex justify-between w-full'>
           <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name}</h2>
           <StarRating rating={salonData?.data.rating ?? 0}/>
@@ -88,14 +89,15 @@ const Hero = () => {
           </span>
         </div>
       </div>
-      <div className='flex gap-1'>
+      <div className='flex gap-1 px-1 md:px-0'>
         <img className='hidden md:block md:max-w-[60%] mix-blend-darken' src={salonData?.data.images[0].url as string} alt='img.png' />
         <div className='flex flex-col justify-between gap-1'>
-          {salonData?.data?.images[1] && <img className='hidden md:block' src={salonData?.data?.images[1].url as string} alt="img.png" />}
+          {salonData?.data?.images[1] && <img className='hidden md:block ' src={salonData?.data?.images[1].url as string} alt="img.png" />}
           <div className='hidden md:block'><ImageCarousel images={salonData?.data.images.slice(2)}/></div>
           <div className='md:hidden'><ImageCarousel images={salonData?.data?.images}/></div>
         </div>
       </div>
+       <Services/> 
     </div>
   )
 }
