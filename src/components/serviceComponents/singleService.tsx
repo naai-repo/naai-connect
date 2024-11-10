@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 
 const SingleService = ({ service }: { service: SingleSalonServiceDataType }) => {
   return (
-    <div className='p-3 border rounded-lg flex flex-col gap-1'>
+    <div className='p-3 border rounded-lg flex flex-col gap-1 shadow-md'>
       <div className='flex justify-between w-full items-center'>
         <h2 className='font-semibold capitalize'>{service?.serviceTitle}</h2>
         {service.targetGender=="male"?<Image className="h-8" src={MenIcon} alt="men_icon" /> :

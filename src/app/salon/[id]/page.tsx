@@ -5,8 +5,8 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { salonIdSelector, salonLoading, serviceSelector, singleSalonDataSelector } from "@/recoil/salon.atom";
 import { useSalonService } from "@/hooks/salon.hooks";
 import MainWrapper from "@/components/mainWrapper/mainWrapper";
-import Services from "./comonents/Services";
 import Hero from "./comonents/hero";
+import Services from "./comonents/Services";
 
 const DynamicPage = () => {
   const params = useParams();

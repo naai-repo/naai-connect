@@ -68,7 +68,7 @@ const Hero = () => {
       <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-14 md:top-0 bg-[#fbfbfb] z-30'>
         <div className='flex justify-between w-full'>
           <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name}</h2>
-          <StarRating rating={salonData?.data.rating ?? 0}/>
+          <StarRating rating={salonData?.data.rating ?? 0} />
         </div>
         <div className='text-gray-500 text-sm'>
           {salonData?.data.address}

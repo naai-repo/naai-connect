@@ -53,11 +53,10 @@ const Services = () => {
           <SlidersHorizontal className='rotate-90' onClick={()=>ServiceFilterRef.current?.openSheet()}/>
           <Searchbar/>
         </div>
-        
       </div>
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2 px-1'>
         {services.map(service=>(
-          <SingleService service={service}/>
+          <SingleService key={service.id} service={service}/>
         ))}
       </div>
     </div>
