@@ -15,4 +15,18 @@ export default class Salons {
       }
     });
   };
+  
+  static getAllCategories = (salonId:string,gender?:string)=>{
+    return new Promise<CategoriesResType>(async (resolve,reject)=>{
+      try {
+        let params = {salonId}
+        let res = await axios.get(API_CONSTANTS.getCategories,{params});
+        // let res = await axios.get("http://localhost:8800/partner/service/category/all",{params})
+        if (res?.data?.status == 'failed') throw res.data.message;
+        return resolve((JSON.parse(JSON.stringify(res.data).replaceAll("_id","id")) as CategoriesResType));
+      } catch (error:any) {
+        return reject(error);
+      }
+    })
+  }
 }
