@@ -1,16 +1,14 @@
-
-
 declare type SingleSalonResponseType = {
   status: string;
   message: string;
-  data: salonData
+  data: salonData;
 };
 
 declare type salonData = {
   data: SingleSalonDataType;
   artists: SingleSlonArtistDataType[];
   services: SingleSalonServiceDataType[];
-}
+};
 
 declare type SingleSalonDataType = {
   location: Location;
@@ -96,8 +94,8 @@ declare type SingleSalonServiceDataType = {
   cutPrice: number;
   productsUsed: any[];
   active: boolean;
-  reminderDays:number,
-  assignedArtists:string[],
+  reminderDays: number;
+  assignedArtists: string[];
   createdAt: string;
   updatedAt: string;
 };
@@ -155,4 +153,10 @@ type Membership = {
 type Timing = {
   opening: string;
   closing: string;
+};
+
+declare type CategoriesResType = {
+  status: string;
+  message: string;
+  data: string[];
 };

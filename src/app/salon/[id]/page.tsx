@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useRecoilState } from "recoil";
-import { salonLoading, singleSalonDataSelector } from "@/recoil/salon.atom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { salonIdSelector, salonLoading, serviceSelector, singleSalonDataSelector } from "@/recoil/salon.atom";
 import { useSalonService } from "@/hooks/salon.hooks";
 import MainWrapper from "@/components/mainWrapper/mainWrapper";
 import Hero from "./comonents/Hero";
@@ -14,6 +14,8 @@ const DynamicPage = () => {
   const salonService = useSalonService();
   const [salonData,setSalonData] = useRecoilState(singleSalonDataSelector);
   const [loading,setLoading] = useRecoilState(salonLoading);
+  const setSalonId = useSetRecoilState(salonIdSelector);
+  const setServices = useSetRecoilState(serviceSelector);
 
   if (!id) {
     return <div>Loading...</div>;
@@ -21,10 +23,12 @@ const DynamicPage = () => {
 
   useEffect(()=>{
     setLoading(true);
+    setSalonId(id);
     const load = async ()=>{
       try {
         const res = await salonService.getSalonDataById(id);
         setSalonData(res?.data?.data);
+        setServices(res.data?.data?.services);
       } catch (error) {
         // naaitoast
       } finally{

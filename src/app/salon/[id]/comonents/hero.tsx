@@ -73,7 +73,7 @@ const Hero = () => {
         <div className='text-gray-500 text-sm'>
           {salonData?.data.address}
         </div>
-        <div className='border w-fit rounded-2xl px-5 flex gap-4 text-sm text-gray-500' >
+        <div className='border w-fit rounded-2xl px-5 py-1 flex gap-4 text-sm text-gray-500' >
           <span className={cn(isopen ? "text-green-600" : "text-red-500")}>{isopen ? "Open now" : "Close now"}</span> -
           <span>{formatTimeTo12Hour(salonData?.data.timing.opening as string)} -
             {formatTimeTo12Hour(salonData?.data.timing.closing as string)} (Today)

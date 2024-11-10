@@ -10,5 +10,13 @@ export function useSalonService() {
       throw errorResponse({message: error.toString()});
     }
   };
-  return {getSalonDataById}
+  const getAllCategories = async (salonId:string):Promise<allCategoriesController> =>{
+    try {
+      let res = await Salons.getAllCategories(salonId);
+      return successResponse<typeof res>({ data: res });
+    } catch (error:any) {
+      throw errorResponse({ message: error.toString() });
+    }
+  }
+  return {getSalonDataById,getAllCategories}
 }
