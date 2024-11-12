@@ -4,6 +4,7 @@ declare type SalonAtomType = {
   filters:filterState
   singleSalonData : salonData;
   services:SingleSalonServiceDataType[];
+  selectedService:SingleSalonServiceDataType;
   categories:string[];
   isOverLayLoading:boolean;
   isOpen:boolean

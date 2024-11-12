@@ -1,5 +1,5 @@
-import Filter from '@/app/salon/[id]/comonents/Filter/FilerWrapper'
-import SingleService from '@/components/serviceComponents/singleService'
+import Filter from '@/app/salon/[id]/comonents/Filter/FilterWrapper'
+import SingleService from '@/components/serviceComponents/SingleService'
 import { filterSelector, pureServiceSelector, serviceSelector } from '@/recoil/salon.atom'
 import { SlidersHorizontal } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'

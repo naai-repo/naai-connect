@@ -96,6 +96,7 @@ declare type SingleSalonServiceDataType = {
   active: boolean;
   reminderDays: number;
   assignedArtists: string[];
+  incart?:boolean;
   createdAt: string;
   updatedAt: string;
 };

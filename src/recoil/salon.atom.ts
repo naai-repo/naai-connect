@@ -1,3 +1,4 @@
+import { faL } from "@fortawesome/free-solid-svg-icons";
 import { atom, selector, selectorFamily } from "recoil";
 
 const defaultState = {
@@ -184,3 +185,97 @@ export const serviceSesrchSelector = selector({
     }))
   }
 })
+
+// cart functionality
+export const selectedServiceSelector = selector<SingleSalonServiceDataType>({
+  key:"selectedServiceSelector",
+  get:({get})=> {
+    const salonData = get(salonAtom);
+    return salonData?.selectedService ?? {};
+  },
+  set:({set},val)=>{
+    set(salonAtom, (prev) => ({
+      ...prev,
+      selectedService: val as SingleSalonServiceDataType,
+    }))
+  }
+})
+
+export const serviceAddToCartSelector = selector<string>({
+  key: "serviceAddToCartSelector",
+  get: ({ get }) => {
+    return ""; 
+  },
+  set: ({ set }, id) => {
+    set(salonAtom, (prev) => {
+      const services = prev.singleSalonData?.services?.map(service => {
+        if (service.id === id) {
+          return { ...service, incart: true };
+        }
+        return service;
+      });
+      const showServices = prev.services.map((service)=>{
+        if (service.id === id) {
+          return { ...service, incart: true };
+        }
+        return service;
+      })
+      return { ...prev,
+        services:showServices,
+        singleSalonData:{
+        ...prev.singleSalonData,
+        services:services
+      }};
+    });
+  },
+});
+
+
+export const serviceRemoveFromCartSelector = selector<string>({
+  key:"serviceRemoveFromCartSelector",
+  get:({get})=> {return ""},
+  set:({set},id)=>{
+    set(salonAtom, (prev) => {
+      let services = prev.singleSalonData.services.map(service=>{
+        if(service.id === id){
+          return { ...service, incart: false };
+        }
+        return service;
+      })
+      const showServices = prev.services.map((service)=>{
+        if (service.id === id) {
+          return { ...service, incart: false };
+        }
+        return service;
+      })
+      return { ...prev,
+        services:showServices,
+        singleSalonData:{
+        ...prev.singleSalonData,
+        services:services
+      }};
+    })
+  }
+});
+
+export const resetCartServicesSelector = selector({
+  key:"resetCartServicesSelector",
+  get:({get})=> {},
+  set:({set})=>{
+    set(salonAtom, (prev) => ({
+      ...prev,
+      services:prev.services.map(service=>({...service,incart:false})),
+      singleSalonData: {
+        ...prev.singleSalonData,
+        services:prev.singleSalonData.services.map(service => ({...service, incart: false}))}
+    }))
+  }
+});
+
+export const getCartServicesSelector = selector<SingleSalonServiceDataType[]>({
+  key:"getCartServicesSelector",
+  get:({get})=> {
+    const salonData = get(salonAtom);
+    return salonData.singleSalonData?.services?.filter(service=>service.incart) ?? [];
+  }
+});
