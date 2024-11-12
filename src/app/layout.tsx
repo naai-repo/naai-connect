@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className} ${poppins.style} scrollbar-hide`}
+        className={`${poppins.className} scrollbar-hide`}
       >
         <StoreProvider>{children}</StoreProvider>
       </body>

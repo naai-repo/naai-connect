@@ -7,6 +7,7 @@ import { useSalonService } from "@/hooks/salon.hooks";
 import MainWrapper from "@/components/mainWrapper/mainWrapper";
 import Hero from "./comonents/hero";
 import Services from "./comonents/Services";
+import Cart from "@/components/demoCart/cart";
 
 const DynamicPage = () => {
   const params = useParams();
@@ -46,6 +47,7 @@ const DynamicPage = () => {
     }}>
       <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10">
         <Hero/>
+        <Cart/>
       </div>
     </MainWrapper>
   );

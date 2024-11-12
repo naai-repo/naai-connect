@@ -1,17 +1,13 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { Button } from '../../../../../components/ui/button';
-import { Plus, X } from 'lucide-react';
-import { CategoryFilter, GenderFilter, SortFilter } from './FilterCategories';
-import { useRecoilState } from 'recoil';
+  SheetHeader
+} from "@/components/ui/sheet";
 import { ApplyFilterSelector, resetFilterSelector } from '@/recoil/salon.atom';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { Button } from '../../../../../components/ui/button';
+import { CategoryFilter, GenderFilter, SortFilter } from './FilterCategories';
 
 
 const Filter = forwardRef<ServiceFilterRefType>(({ }, ref) => {
@@ -39,7 +35,7 @@ const Filter = forwardRef<ServiceFilterRefType>(({ }, ref) => {
           <SortFilter/>
           <CategoryFilter/>
           <GenderFilter/>
-          <div className='flex justify-between p-5 px-10'>
+          <div className='flex justify-between p-5 px-10 gap-2'>
             <Button className='px-14 py-5 text-lg font-semibold' variant={"outline"} onClick={()=>setClearFilter()}>Clear</Button>
             <Button className='px-14 py-5 text-lg font-semibold' onClick={()=>{
               setApplyFilter();
