@@ -5,8 +5,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { salonIdSelector, salonLoading, serviceSelector, singleSalonDataSelector } from "@/recoil/salon.atom";
 import { useSalonService } from "@/hooks/salon.hooks";
 import MainWrapper from "@/components/mainWrapper/mainWrapper";
-import Hero from "./comonents/hero";
-import Services from "./comonents/Services";
+import Hero from "./components/Hero";
 import Cart from "@/components/demoCart/cart";
 
 const DynamicPage = () => {
@@ -43,11 +42,11 @@ const DynamicPage = () => {
     <MainWrapper name="Salon" parentWrapper={{
       className : "flex flex-col sm:gap-4 sm:py-4 sm:pl-14 h-full"
     }} mainWrapper={{
-      className : "grid flex-1 items-start gap-4 p-2 sm:px-6 sm:py-0 md:gap-8 h-full w-full"
+      className : "grid flex-1 items-start gap-4 p-2 pt-0 sm:px-6 sm:py-0 md:gap-4 h-full w-full"
     }}>
       <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10">
-        <Hero/>
         <Cart/>
+        <Hero/>
       </div>
     </MainWrapper>
   );

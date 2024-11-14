@@ -23,6 +23,7 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
   const [data, setData] = useState({ open: false });
   const selectedService = useRecoilValue(selectedServiceSelector);
   const setServiceAddToCart = useSetRecoilState(serviceAddToCartSelector);
+  const [selectedVariableService,setSelectedVariableService] = useState(selectedService);
 
   const openSheet = () => {
     setData({ open: true });
@@ -35,6 +36,23 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
     return { openSheet, closeSheet };
   });
 
+  const handlevariableChange = (id:string)=>{
+    let service = {
+      ...selectedService,
+      variables:selectedService.variables.map(variable=>{
+        if(variable.id===id){
+          return {...variable,selected:true}
+        }
+        return {...variable,selected:false}
+      })
+    };
+    setSelectedVariableService(service);
+  };
+
+  const addToCart = () => {
+    setServiceAddToCart({...selectedVariableService,incart:true});
+  } 
+
   return (
     <Sheet key={"bottom"} open={data.open} onOpenChange={(e) => {
       if (data.open != e) setData({ ...data, open: e });
@@ -45,24 +63,27 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
             {selectedService.targetGender == "male" ? <Image className="h-8" src={MenIcon} alt="men" /> :
               <Image className="h-8" src={WomenIcon} alt="women" />}
           </SheetTitle>
-          <SheetDescription className='text-base capitalize border shadow-lg rounded-lg text-start p-5 pt-2'>
+          <div className='text-base capitalize border shadow-lg rounded-lg text-start p-5 pt-2'>
             <span className='font-semibold text-gray-600'>{selectedService.variables && selectedService?.variables[0]?.variableType}</span>
             <div className='pt-3 flex flex-col gap-2'>
-              <RadioGroup >
+              <RadioGroup onValueChange={(val)=>handlevariableChange(val)}>
                 {selectedService?.variables?.map(variable => (
-                  <div className="flex items-center  justify-between space-x-2">
+                  <div key={variable.id} className="flex items-center  justify-between space-x-2">
                     <Label htmlFor={variable.id}>{variable.variableName}</Label>
-                    <span className='flex gap-4 items-center'>
+                    <div className='flex gap-4 items-center'>
                       + {currencyConverter(variable.variableCutPrice)}
                       <RadioGroupItem value={variable.id} id={variable.id} />
-                    </span>
+                    </div>
                   </div>
                 ))}
               </RadioGroup>
             </div>
-          </SheetDescription>
+          </div>
             <div className='flex justify-end pt-20 pb-5'>
-              <Button onClick={()=>{}}><Plus/> Add</Button>
+              <Button onClick={()=>{
+                addToCart();
+                setData({ ...data, open: false });
+              }}><Plus/> Add</Button>
             </div>
         </SheetHeader>
       </SheetContent>

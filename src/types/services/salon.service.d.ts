@@ -48,7 +48,7 @@ declare type SingleSalonDataType = {
   taxIncluded: true;
 };
 
-declare type SingleSlonArtistDataType = {
+declare type SingleSalonArtistDataType = {
   location: Location;
   timing: {
     start: string;
@@ -89,6 +89,7 @@ declare type SingleSalonServiceDataType = {
     variableCutPrice: number;
     variableTime: number;
     id: string;
+    selected?:boolean;
   }[];
   basePrice: number;
   cutPrice: number;

@@ -1,12 +1,15 @@
-import Filter from '@/app/salon/[id]/comonents/Filter/FilterWrapper'
-import SingleService from '@/components/serviceComponents/SingleService'
+
+import Filter from '@/app/salon/[id]/components/Filter/FilterWrapper'
+import SingleService from '@/components/serviceComponents/singleService'
 import { filterSelector, pureServiceSelector, serviceSelector } from '@/recoil/salon.atom'
 import { SlidersHorizontal } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import Searchbar from './Filter/FilterCategories'
+import Searchbar from '../../app/salon/[id]/components/Filter/FilterCategories'
+import { cn } from '@/lib/utils'
+import Cart from '../demoCart/cart'
 
-const Services = () => {
+const Services = ({from}:{from:string}) => {
   const pureServices = useRecoilValue(pureServiceSelector);
   const [services,setServices] = useRecoilState(serviceSelector);
   const ServiceFilterRef = useRef<ServiceFilterRefType>(null);
@@ -47,7 +50,7 @@ const Services = () => {
   return (
     <div className='pt-4 w-full'>
       <Filter ref={ServiceFilterRef}/>
-      <div className='flex justify-between items-center pb-4 pt-3 sticky top-[14.8rem] md:top-[10rem] bg-[#fbfbfb]'>
+      <div className={cn('flex justify-between items-center pb-3 pt-3 bg-[#fbfbfb] sticky',from=="hero"?'top-[14.8rem] md:top-[10rem]':"top-28")}>
         <h1 className='font-bold text-lg'>Services</h1>
         <div className='flex items-center gap-2'>
           <SlidersHorizontal className='rotate-90' onClick={()=>ServiceFilterRef.current?.openSheet()}/>

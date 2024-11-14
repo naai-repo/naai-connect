@@ -38,6 +38,15 @@ export const salonIdSelector = selector<string>({
   },
 });
 
+// artist selector
+export const artistsSelector = selector<SingleSalonArtistDataType[]>({
+  key: "artistsSelector",
+  get: ({ get }) => {
+    const salonData = get(salonAtom);
+    return salonData.singleSalonData.artists ?? [];
+  }
+})
+
 export const singleSalonDataSelector = selector<salonData | undefined>({
   key: "singleSalonDataSelector",
   get: ({ get }) => {
@@ -201,22 +210,23 @@ export const selectedServiceSelector = selector<SingleSalonServiceDataType>({
   }
 })
 
-export const serviceAddToCartSelector = selector<string>({
+export const serviceAddToCartSelector = selector<SingleSalonServiceDataType>({
   key: "serviceAddToCartSelector",
   get: ({ get }) => {
-    return ""; 
+    return {} as SingleSalonServiceDataType; 
   },
-  set: ({ set }, id) => {
+  set: ({ set }, cartService) => {
+    let cartServicedup =  {...cartService} as SingleSalonServiceDataType
     set(salonAtom, (prev) => {
       const services = prev.singleSalonData?.services?.map(service => {
-        if (service.id === id) {
-          return { ...service, incart: true };
+        if (service.id === cartServicedup.id) {
+          return cartServicedup;
         }
         return service;
       });
       const showServices = prev.services.map((service)=>{
-        if (service.id === id) {
-          return { ...service, incart: true };
+        if (service.id === cartServicedup.id) {
+          return cartServicedup;
         }
         return service;
       })
@@ -231,20 +241,21 @@ export const serviceAddToCartSelector = selector<string>({
 });
 
 
-export const serviceRemoveFromCartSelector = selector<string>({
+export const serviceRemoveFromCartSelector = selector<SingleSalonServiceDataType>({
   key:"serviceRemoveFromCartSelector",
-  get:({get})=> {return ""},
-  set:({set},id)=>{
+  get:({get})=> {return {} as SingleSalonServiceDataType},
+  set:({set},cartService) => {
+    let cartServicedup =  {...cartService} as SingleSalonServiceDataType;
     set(salonAtom, (prev) => {
       let services = prev.singleSalonData.services.map(service=>{
-        if(service.id === id){
-          return { ...service, incart: false };
+        if(service.id === cartServicedup.id){
+          return cartServicedup
         }
         return service;
       })
       const showServices = prev.services.map((service)=>{
-        if (service.id === id) {
-          return { ...service, incart: false };
+        if (service.id === cartServicedup.id) {
+          return cartServicedup
         }
         return service;
       })
@@ -264,7 +275,9 @@ export const resetCartServicesSelector = selector({
   set:({set})=>{
     set(salonAtom, (prev) => ({
       ...prev,
-      services:prev.services.map(service=>({...service,incart:false})),
+      services:prev.services.map(service=>({...service,
+        variables:service.variables?.map(variable=>({...variable,selected:false})) || [],
+        incart:false})),
       singleSalonData: {
         ...prev.singleSalonData,
         services:prev.singleSalonData.services.map(service => ({...service, incart: false}))}
