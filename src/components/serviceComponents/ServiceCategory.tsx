@@ -28,7 +28,9 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
   const openSheet = () => {
     setData({ open: true });
   }
+
   const closeSheet = () => {
+    setSelectedVariableService({} as SingleSalonServiceDataType);
     setData({ open: false });
   }
 
@@ -55,7 +57,7 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
 
   return (
     <Sheet key={"bottom"} open={data.open} onOpenChange={(e) => {
-      if (data.open != e) setData({ ...data, open: e });
+      if (!e) closeSheet();
     }}>
       <SheetContent side={"bottom"} className='rounded-t-xl p-4 pt-3'>
         <SheetHeader>
@@ -80,7 +82,7 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
             </div>
           </div>
             <div className='flex justify-end pt-20 pb-5'>
-              <Button onClick={()=>{
+              <Button disabled={selectedVariableService.serviceTitle!=selectedService.serviceTitle} onClick={()=>{
                 addToCart();
                 setData({ ...data, open: false });
               }}><Plus/> Add</Button>

@@ -1,21 +1,25 @@
 "use client"
-import Services from '@/components/serviceComponents/Services'
 import { progressSelector } from '@/recoil/booking.atom'
 import React from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 
 const Progress = () => {
-  const progress = useRecoilValue(progressSelector);
-  const steps = ["services", "artists", "time & date", "confirm"];
+  const [progress,setProgress] = useRecoilState(progressSelector);
+  const steps = ["artists", "time & date", "confirm"];
 
   return (
-    <div className="flex items-center justify-center w-[99%] sm:w-[59%] md:w-[59%] 2xl:w-[39%] z-20">
+    <div className="flex items-center justify-center w-[95%] z-20 fixed top-15 left-2" >
       {steps.map((step, index) => {
         const isActive = index < progress;
         const isLastStep = index === steps.length - 1;
         return (
           <React.Fragment key={index}>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center" onClick={()=>{
+              console.log(progress,index);
+              if(progress>index+1){
+                setProgress(index+1);
+              }
+            }}>
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold border-2 ${
                   isActive ? 'bg-gray-300 border-black text-black' : 'bg-white border-gray-300 text-gray-400'
@@ -32,7 +36,6 @@ const Progress = () => {
                 }`}
               ></div>
             )}
-            
           </React.Fragment>
         );
       })}

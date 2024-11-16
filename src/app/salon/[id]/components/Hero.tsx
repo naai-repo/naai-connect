@@ -1,20 +1,21 @@
+import StarRating from '@/components/rating/Rating'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { isSalonOpenSelector, singleSalonDataSelector } from '@/recoil/salon.atom'
-import { CalendarClock, MapPinned, PhoneCall } from 'lucide-react'
+import { MapPinned, PhoneCall } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import ImageCarousel from './ImageCarousel'
-import StarRating from '@/components/rating/Rating'
 import Services from '../../../../components/serviceComponents/Services'
-import { useRouter } from 'next/navigation'
-import BookingWrapper from './booking/BookingWrapper'
+import BookingWrapper from './Booking/BookingWrapper'
+import ImageCarousel from './ImageCarousel'
+import LoginDialog from './LoginDialog/loginDialog'
 
 
 const Hero = () => {
   const salonData = useRecoilValue(singleSalonDataSelector);
   const [isopen, setIsOpen] = useRecoilState(isSalonOpenSelector);
   const bookingRef = useRef<BookingSheetType>(null);
+  const loginDialogRef = useRef<LoginDialogRefType>(null);
 
   useEffect(() => {
     const openingTime = new Date();
@@ -69,6 +70,7 @@ const Hero = () => {
   return (
     <div className='w-full px-1 pt-0 pb-0 flex flex-col'>
       <BookingWrapper ref={bookingRef}/>
+      <LoginDialog />
       <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-14 md:top-0 bg-[#fbfbfb] z-30'>
         <div className='flex justify-between w-full'>
           <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name}</h2>
@@ -102,9 +104,6 @@ const Hero = () => {
         </div>
       </div>
        <Services from='hero'/>
-       <div onClick={()=>bookingRef.current?.openSheet()} className='fixed bottom-36 right-5 h-12 w-12 rounded-full bg-green-500 border border-green-600 shadow-2xl'>
-          <CalendarClock className='ml-3 mt-3'/>
-       </div>
     </div>
   )
 }

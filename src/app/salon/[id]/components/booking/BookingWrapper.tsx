@@ -1,58 +1,65 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle } from 'react';
+
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
-import Progress from './components/Progress';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+  Dialog,
+  DialogContent,
+  DialogHeader
+} from "@/components/ui/dialog";
+
 import Cart from '@/components/demoCart/cart';
-import { useRecoilValue } from 'recoil';
-import { progressSelector } from '@/recoil/booking.atom';
-import Services from '@/components/serviceComponents/Services';
+import { Button } from '@/components/ui/button';
+import { bookingDialogSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
+import { X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import ArtistSelect from './components/ArtistSelect';
+import Progress from './components/Progress';
+import SlotWrapper from './components/timeSlot/SlotWrapper';
+import { DialogDescription } from '@radix-ui/react-dialog';
+import { Input } from '@/components/ui/input';
 
 const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
-  const [data, setData] = useState({ open: false });
-  const progress = useRecoilValue(progressSelector);
+  const [open, setOpen] = useRecoilState(bookingDialogSelector);
+  const [progress, setProgress] = useRecoilState(progressSelector);
+  const setSelctedArtistService = useSetRecoilState(selectedArtistServiceSelector);
 
   const openSheet = () => {
-    setData({ open: true });
+    setOpen(true);
   }
   const closeSheet = () => {
-    setData({ open: false });
+    for(let i=0;i<progress;i++){
+      window.history.back();
+    }
+    setSelctedArtistService([]);
+    setProgress(0);
+    setOpen(false);
   }
 
   useImperativeHandle(ref, () => {
     return { openSheet, closeSheet };
   });
-  return (
-    <Sheet
-      open={data.open} onOpenChange={(e) => {
-      if (data.open != e) setData({ ...data, open: e });
-    }}>
-      <SheetContent className='p-0 w-full sm:min-w-[70%] md:min-w-[60%] 2xl:min-w-[40%] overflow-y-auto scrollbar-hide'>
-        <SheetHeader>
-          <SheetTitle className='fixed top-0 w-full bg-[#fbfbfb] pb-4 p-2'>
-            <div className='flex justify-end pb-2'>
-            <Button onClick={()=>closeSheet()} size={"icon"} variant={"outline"} className='rounded-lg'><X/></Button>
-            </div>
-            <div className='w-full'>
-              <Progress/>
-            </div>
-          </SheetTitle>
-          <Cart/>
-          <div className='mt-32'>
-            {progress==0?<Services from='booking'/>:progress==1?<ArtistSelect/>:progress==2}
-          </div>
-          
-        </SheetHeader>
-      </SheetContent>
-    </Sheet>
 
+  return (
+    <Dialog open={open} onOpenChange={(e) => {
+      if (!e) closeSheet();
+    }}>
+      <DialogContent className="h-[100%] max-w-[100%] sm:h-[90%] sm:max-w-[60%] flex flex-col py-4 px-2 sm:p-4 overflow-y-auto scrollbar-hide">
+        <DialogHeader className="flex flex-row justify-end items-center">
+          <Button variant="outline" className="py-4 px-2" size="sm" onClick={(e) => {
+            closeSheet();
+          }}>
+            <X size={18} ></X>
+          </Button>
+        </DialogHeader>
+          <div className='w-full'>
+            <Progress />
+          </div>
+        <Cart />
+        <div className='pt-[4.9rem]'>
+          {progress == 1 ? <ArtistSelect /> : progress == 2?<SlotWrapper/>:progress==3}
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 })
 

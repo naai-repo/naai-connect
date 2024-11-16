@@ -12,7 +12,6 @@ import ServiceCategory from "./ServiceCategory";
 const SingleService = ({ service }: { service: SingleSalonServiceDataType }) => {
   const setSelectedService = useSetRecoilState(selectedServiceSelector);
   const setServiceAddToCart = useSetRecoilState(serviceAddToCartSelector);
-
   const setRemoveServiceFromCart = useSetRecoilState(serviceRemoveFromCartSelector);
 
   const ServiceCategoryRef = useRef<ServiceCategoryRefType>(null);
@@ -47,7 +46,7 @@ const SingleService = ({ service }: { service: SingleSalonServiceDataType }) => 
         {service.targetGender=="male"?<Image className="h-8" src={MenIcon} alt="men" /> :
         <Image className="h-8" src={WomenIcon} alt="women" />}
       </div>
-      <div>{currencyConverter(service.cutPrice)}</div>
+      <div className="text-left">{currencyConverter(service.cutPrice)}</div>
       {service.incart? <Button className="w-fit" onClick={()=>{removefromService(service)}}><Minus/> Remove</Button>
         : <Button className="w-fit" onClick={()=>addToCart(service)}><Plus/> Add</Button>}
     </div>

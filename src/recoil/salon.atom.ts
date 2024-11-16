@@ -47,6 +47,15 @@ export const artistsSelector = selector<SingleSalonArtistDataType[]>({
   }
 })
 
+// artist by id
+// export const artistByIdSelector = selectorFamily<string,Partial<SingleSalonArtistDataType>>({
+//   key:"artistByIdSelector",
+//   get:(id)=>({get})=>{
+//     const salonData = get(salonAtom);
+//     const artist = 
+//   }
+// })
+
 export const singleSalonDataSelector = selector<salonData | undefined>({
   key: "singleSalonDataSelector",
   get: ({ get }) => {

@@ -1,17 +1,23 @@
-
-
-
 declare type bookingAtomTypr = {
-  progress:number
-  selectedServices: SingleSalonServiceDataType[]
-  selectedArtist:SingleSlonArtistDataType
-  artistSelectionType:artistSelectionType;
-  selectedArtistService: selectedArtistServiceType[]
-}
+  progress: number;
+  selectedServices: SingleSalonServiceDataType[];
+  artistSelectionType: artistSelectionType;
+  selectedArtistService: selectedArtistServiceType[];
+  cartTotal: cartTotalType;
+  availableSlots:string[][]
+  openDialoge:boolean;
+  selectedDate: Date
+};
+declare type cartTotalType = {
+  original: number;
+  discounted: number;
+};
 
-declare type artistSelectionType = "single"|"multiple" | undefined;
+
+
+declare type artistSelectionType = "single" | "multiple" | undefined;
 
 declare type selectedArtistServiceType = {
-  artist:SingleSlonArtistDataType
-  service:SingleSalonServiceDataType
-}
+  artist: SingleSalonArtistDataType;
+  service: SingleSalonServiceDataType;
+};
