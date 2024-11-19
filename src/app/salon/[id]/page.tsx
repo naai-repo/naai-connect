@@ -1,13 +1,15 @@
 "use client"
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { getCartServicesSelector, salonIdSelector, salonLoading, serviceSelector, singleSalonDataSelector } from "@/recoil/salon.atom";
-import { useSalonService } from "@/hooks/salon.hooks";
-import MainWrapper from "@/components/mainWrapper/mainWrapper";
-import Hero from "./components/Hero";
 import Cart from "@/components/demoCart/cart";
+import MainWrapper from "@/components/mainWrapper/mainWrapper";
+import { useSalonService } from "@/hooks/salon.hooks";
+import { useToast } from "@/hooks/use-toast";
+import { userIdSelector } from "@/recoil/auth.atom";
 import { progressSelector } from "@/recoil/booking.atom";
+import { getCartServicesSelector, salonIdSelector, salonLoading, serviceSelector, singleSalonDataSelector } from "@/recoil/salon.atom";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import Hero from "./components/Hero";
 
 const DynamicPage = () => {
   const params = useParams();
@@ -19,6 +21,8 @@ const DynamicPage = () => {
   const setServices = useSetRecoilState(serviceSelector);
   const cartServices = useRecoilValue(getCartServicesSelector);
   const setProgress = useSetRecoilState(progressSelector);
+  const setuserId = useSetRecoilState(userIdSelector);
+  const {toast} = useToast();
 
   if (!id) {
     return <div>Loading...</div>;
@@ -27,13 +31,17 @@ const DynamicPage = () => {
   useEffect(()=>{
     setLoading(true);
     setSalonId(id);
+    let userId = localStorage.getItem("userId");
+    setuserId(userId ?? undefined)
     const load = async ()=>{
       try {
         const res = await salonService.getSalonDataById(id);
         setSalonData(res?.data?.data);
         setServices(res.data?.data?.services);
+        toast({
+          description:  "Artist is not Available please Select Different Artist",
+        })
       } catch (error) {
-        // naaitoast
       } finally{
         setLoading(false);
       }
@@ -52,7 +60,9 @@ const DynamicPage = () => {
       className : "grid flex-1 items-start gap-4 p-2 pt-0 sm:px-6 sm:py-0 md:gap-4 h-full w-full"
     }}>
       <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10">
-        <Cart/>
+        <div className="w-[94%] right-[3%] fixed bottom-5">
+          <Cart/>
+        </div>
         <Hero/>
       </div>
     </MainWrapper>

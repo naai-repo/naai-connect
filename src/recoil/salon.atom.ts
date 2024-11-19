@@ -43,18 +43,19 @@ export const artistsSelector = selector<SingleSalonArtistDataType[]>({
   key: "artistsSelector",
   get: ({ get }) => {
     const salonData = get(salonAtom);
-    return salonData.singleSalonData.artists ?? [];
+    return salonData.singleSalonData?.artists ?? [];
   }
 })
 
 // artist by id
-// export const artistByIdSelector = selectorFamily<string,Partial<SingleSalonArtistDataType>>({
-//   key:"artistByIdSelector",
-//   get:(id)=>({get})=>{
-//     const salonData = get(salonAtom);
-//     const artist = 
-//   }
-// })
+export const artistByIdSelector = selectorFamily<SingleSalonArtistDataType,string>({
+  key:"artistByIdSelector",
+  get:(id)=>({get})=>{
+    const salonData = get(salonAtom);
+    const artist = salonData.singleSalonData?.artists?.find((artist)=>artist.id===id);
+    return artist ?? null;
+  },
+})
 
 export const singleSalonDataSelector = selector<salonData | undefined>({
   key: "singleSalonDataSelector",

@@ -8,14 +8,13 @@ const Progress = () => {
   const steps = ["artists", "time & date", "confirm"];
 
   return (
-    <div className="flex items-center justify-center w-[95%] z-20 fixed top-15 left-2" >
+    <div className="flex items-center justify-center w-[95%] z-20 " >
       {steps.map((step, index) => {
         const isActive = index < progress;
         const isLastStep = index === steps.length - 1;
         return (
           <React.Fragment key={index}>
             <div className="flex flex-col items-center" onClick={()=>{
-              console.log(progress,index);
               if(progress>index+1){
                 setProgress(index+1);
               }

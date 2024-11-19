@@ -8,8 +8,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { bookingDateSelector, bookingSlotsSelector, selectedArtistServiceSelector } from "@/recoil/booking.atom"
+import { cn, formatDateToDDMMYYYY, formateDateToString, removeTimeZoneOffsetToDate } from "@/lib/utils"
+import { availableSlotsSelector, bookingDateSelector, bookingSlotsSelector, progressSelector, selectedArtistServiceSelector } from "@/recoil/booking.atom"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { useEffect } from "react"
 import { useBookingService } from "@/hooks/booking.hooks"
@@ -26,31 +26,36 @@ export function DatePicker() {
   const [selectedDate, setSelectedDate] = useRecoilState(bookingDateSelector);
   const salonId = useRecoilValue(salonIdSelector);
   const selectedServiceArtist = useRecoilValue(selectedArtistServiceSelector);
-  const setBookingSlot = useSetRecoilState(bookingSlotsSelector)
+  const setBookingSlot = useSetRecoilState(availableSlotsSelector);
   const bookingService = useBookingService();
 
   useEffect(() => {
     const load = async () => {
-      let requests: TimeSlotRequestType[] = selectedServiceArtist.map((serviceArtist) => {
-        return {
-          artist: serviceArtist.artist.id,
-          service: serviceArtist.service.id
+      try{
+        let requests: TimeSlotRequestType[] = selectedServiceArtist.map((serviceArtist) => {
+          return {
+            artist: serviceArtist.artist.id,
+            service: serviceArtist.service.id
+          }
+        })
+  
+        let payload: TimeSlotPayload = {
+          salonId: salonId,
+          date: formatDateToDDMMYYYY(removeTimeZoneOffsetToDate(selectedDate)),
+          requests: requests ?? []
         }
-      })
-
-      let payload: TimeSlotPayload = {
-        salonId: salonId,
-        date: selectedDate.toISOString(),
-        requests: requests ?? []
+        const token = localStorage.getItem("accessToken");
+        let res = await bookingService.getTimeSlots(payload,token as string);
+        setBookingSlot(res.data.timeSlotsVisible);
+      }catch{
+        setBookingSlot([[""]]);
       }
-      let res = await bookingService.getTimeSlots(payload);
-      setBookingSlot(res.data.timeSlotsVisible);
     }
-    load()
+    load();
   }, [selectedDate])
 
   return (
-    <div className="flex w-full flex-col items-center border  rounded-lg py-5 shadow-sm">
+    <div className="flex w-full flex-col items-center border rounded-lg py-5 shadow-md">
       <h2 className="capitalize text-gray-500 justify-self-start">Select booking date</h2>
       <Popover>
         <PopoverTrigger asChild>

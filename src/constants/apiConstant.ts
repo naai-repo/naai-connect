@@ -6,5 +6,5 @@ export default class API_CONSTANTS {
   static getCategories = this.BASE_URL+'/partner/service/category/all';
   static getTimeSlots = this.BASE_URL+"/appointments/schedule";
   static getUserOtp = this.BASE_URL+ "/customer/user/login";
-
+  static verifyUserOtp = this.BASE_URL+ "/customer/otp/verify";
 }

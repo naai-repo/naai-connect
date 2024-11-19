@@ -44,9 +44,9 @@ export const bookingDateSelector = selector<Date>({
   }
 })
 
-// slots selector
-export const bookingSlotsSelector = selector<string[][]>({
-  key:"bookingSlotsSelector",
+// avialable slots selector
+export const availableSlotsSelector = selector<string[][]>({
+  key:"availableSlotsSelector",
   get:({get})=>{
     const data = get(bookingAtom);
     return data.availableSlots ?? [[]];
@@ -55,6 +55,21 @@ export const bookingSlotsSelector = selector<string[][]>({
     set(bookingAtom,(prev)=>({
       ...prev,
       availableSlots: newVal as string[][]
+    }))
+  }
+});
+
+// booking date selector
+export const bookingSlotsSelector = selector<string[]>({
+  key:"bookingSlotsSelector",
+  get:({get})=>{
+    const data = get(bookingAtom);
+    return data.selectedTime ?? [];
+  },
+  set:({set},newVal)=>{
+    set(bookingAtom,(prev)=>({
+      ...prev,
+      selectedTime:newVal as string[]
     }))
   }
 })
@@ -103,7 +118,7 @@ export const cartTotalSelector = selector<cartTotalType>({
   }
 })
 
-
+// artist selection type
 export const selctedArtistTypeSelector = selector<artistSelectionType>({
   key:"selctedArtistType",
   get:({get})=>{

@@ -6,7 +6,9 @@ declare type bookingAtomTypr = {
   cartTotal: cartTotalType;
   availableSlots:string[][]
   openDialoge:boolean;
-  selectedDate: Date
+  selectedDate: Date;
+  selectedTime:string[];
+  artistNotAvailable:boolean
 };
 declare type cartTotalType = {
   original: number;

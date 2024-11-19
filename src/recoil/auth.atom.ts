@@ -12,13 +12,37 @@ export const userAtom = atom({
   } as User
 });
 // userid getter
-export const getUserIdSelector = selector<string | undefined>({
+export const userIdSelector = selector<string | undefined >({
   key: 'getUserId',
   get: ({ get }) => {
     const user = get(userAtom);
-    return user.userDetails?.data._id ?? undefined;
+    return user.userDetails?.id ?? undefined;
   },
+  set:({set},val)=>{
+    set(userAtom,prev=>({
+      ...prev,userDetails:{
+        ...prev.userDetails,
+        id:val as string
+      }
+    }))
+  }
 })
+
+//userdata selector
+export const otpResSelector = selector<loginOTPResType>({
+  key: 'otpRes',
+  get: ({ get }) => {
+    const user = get(userAtom);
+    return user.loginOTPRes ?? {} as loginOTPResType;
+  },
+  set:({set},val)=>{
+    set(userAtom,(prev)=>({
+      ...prev,
+      loginOTPRes:val as loginOTPResType
+    }))
+  }
+})
+
 
 // logindialog
 export const loginDialogSelector = selector<boolean>({

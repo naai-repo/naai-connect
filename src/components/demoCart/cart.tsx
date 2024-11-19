@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
-import { getUserIdSelector, loginDialogSelector } from '@/recoil/auth.atom';
+import { userIdSelector, loginDialogSelector } from '@/recoil/auth.atom';
 
 // Type definitions
 type ContinueButtonProps = {
@@ -23,7 +23,7 @@ const Cart: React.FC = () => {
   const progress = useRecoilValue(progressSelector);
   const [bookingDialg,setbookingDialog] = useRecoilState(bookingDialogSelector);
   const selectedServicesArtist = useRecoilValue(selectedArtistServiceSelector);
-  const userId = useRecoilValue(getUserIdSelector);
+  const userId = useRecoilValue(userIdSelector);
   const setOpenLoginDialog = useSetRecoilState(loginDialogSelector);
 
   useEffect(()=>{
@@ -57,9 +57,7 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div onClick={()=>{
-      if(!bookingDialg) setbookingDialog(true);
-    }} className='flex justify-between items-center fixed bottom-5 w-[94%] right-[3%] justify-self-center p-5 shadow-md z-50 bg-[#fbfbfb] border border-gray-600 rounded-lg'>
+    <div className='flex justify-between items-center w-full justify-self-center relative p-5 shadow-md z-30 bg-[#fbfbfb] border border-gray-600 rounded-lg'>
       <div className='flex flex-col text-base text-start font-semibold'>
         <span className='text-base text-gray-600'>Total</span>
         <div>
@@ -67,7 +65,7 @@ const Cart: React.FC = () => {
           <span className='pl-2'>{currencyConverter(cartTotal.discounted)}</span>
         </div>
       </div>
-      <ContinueButton progress={progress} userId={userId} onProgressChange={() =>{
+      <ContinueButton progress={progress} userId={userId as string} onProgressChange={() =>{
         if(progress==1 && !userId) {
           setOpenLoginDialog(true);
         }
@@ -78,7 +76,7 @@ const Cart: React.FC = () => {
         variant="outline"
         onClick={() => {
           clearCart();
-          setProgress(0);
+          setbookingDialog(false);
         }}
       >
         <X size={18} />
@@ -110,8 +108,7 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({userId, progress, onProg
       return true;
     }
     else if(progress === 1){
-      if(artistSelectionType=="multiple" && selectedArtistService.length==cartServices.length)return false;
-      else if(artistSelectionType=="single" && selectedArtistService.length==1)return false;
+      if(selectedArtistService.length==cartServices.length) return false;
       return true;
     }
     else if(progress === 2){
@@ -120,20 +117,10 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({userId, progress, onProg
     return true;
   }
 
-  const handleHash = ()=>{
-    if(progress === 0){
-      router.push("#artist");
-    }else if(progress===1 && userId){
-      router.push("#time");
-    }else if(progress==2){
-      router.push("#confirm");
-    }
-  }
   return (
     <Button disabled={disableContinue()} onClick={()=>{
       if(!bookingDialg) setbookingDialog(true);
       onProgressChange();
-      handleHash();
       }}>
       {displayText}
       <ArrowRightFromLine />

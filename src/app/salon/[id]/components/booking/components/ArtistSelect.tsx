@@ -62,14 +62,26 @@ const SingleStaff = () => {
   const allArtists = useRecoilValue(artistsSelector);
 
   const filteredArtists = useMemo(()=>allArtists.filter(artist =>
-    artist.services.some(service => service.serviceId === selectedServices[0].id)
+    artist.services.some(service => (service.serviceId === selectedServices[0].id))
   ),[selectedServices]);
 
+  const handleServicesArtist = (artist:SingleSalonArtistDataType)=>{
+
+    const servicesArtist:selectedArtistServiceType[] = selectedServices.map((service)=>{
+      return {
+        service,
+        artist
+      }
+    })
+
+    setSelectedServiceArtist(servicesArtist);
+  }
+
   return (
-    <RadioGroup className="max-h-32" defaultValue={selectedServiceArtist[0]?.artist?.id || ""}>
+    <RadioGroup className="max-h-44 md:max-h-32" defaultValue={selectedServiceArtist[0]?.artist?.id || ""}>
       {filteredArtists.map((artist, ind) => (
         <div key={artist.id} className={cn('flex justify-between', ind != filteredArtists.length - 1 && 'border-b pb-2 pt-1')}>
-          <div className="flex items-center space-x-4" onClick={() => setSelectedServiceArtist([{artist,service:selectedServices[0]}])}>
+          <div className="flex items-center space-x-4" onClick={() => handleServicesArtist(artist)}>
             <RadioGroupItem value={artist.id} id={artist.id} />
             <Label className='text-gray-500' htmlFor={artist.id}>{artist.name}</Label>
           </div>
@@ -84,9 +96,10 @@ const SingleServiceArtistMultiSelect = () => {
   const [selectedServiceArtist, setSelectedServiceArtist] = useRecoilState(selectedArtistServiceSelector);
   const allArtists = useRecoilValue(artistsSelector);
   const selectedServices = useRecoilValue(getCartServicesSelector);
+  const setSelectionType = useSetRecoilState(selctedArtistTypeSelector);
 
   const filteredArtists = useMemo(()=>allArtists.filter(artist =>
-    artist.services.some(service => service.serviceId === selectedServices[0].id)
+    artist.services.some(service => service.serviceId === selectedServices[0]?.id)
   ),[selectedServices])
 
   const getArtistPrice = (artist:SingleSalonArtistDataType,serviceToAssing:SingleSalonServiceDataType)=>{
@@ -96,6 +109,9 @@ const SingleServiceArtistMultiSelect = () => {
   }
 
   const handleArtistSelect = (artistId:string, serviceToAssign: SingleSalonServiceDataType) => {
+    if(selectedServices.length==1){
+      setSelectionType("multiple")
+    }
     const artist = filteredArtists.find((art=>art.id===artistId));
     setSelectedServiceArtist((prevSelected) => {
       const existingIndex = prevSelected.findIndex((item) => item.service.id === serviceToAssign.id);
@@ -126,9 +142,9 @@ const SingleServiceArtistMultiSelect = () => {
   }
 
   return (
-    <div className='flex flex-col gap-4 max-h-44'>
+    <div className='flex flex-col gap-4 max-h-56 md:max-h-44'>
       {selectedServices.map((service, ind) => (
-        <div key={service.id} className={cn('flex flex-col gap-2 py-2 px-5', ind != selectedServices.length - 1 && ' border-b')}>
+        <div key={service.id} className={cn('flex flex-col gap-2 py-2 px-5', ind != selectedServices.length - 1 && 'border-b')}>
           <div className="flex justify-between">
             <div className='flex items-center capitalize gap-2'>
               <Image className='h-8' src={service.targetGender === "male" ? MenIcon : WomenIcon} alt={"Gender.png"} />
@@ -146,7 +162,7 @@ const SingleServiceArtistMultiSelect = () => {
               return <SelectItem className='flex w-full justify-between' key={artist.id} value={artist.id} >
                 <div className={cn('flex gap-2 capitalize',price>0 &&"text-gray-500")}>
                 <span className='text-black'>{artist.name}</span>
-                ({price > 0 ? "- ": price > 0 ?"+ ":"" } {price > 0 ? currencyConverter(price): price > 0 ?currencyConverter(price):"" })
+                {price > 0 ? " ( - ": price > 0 ?"( + ":"" } {price > 0 ? `${currencyConverter(price)} )`: price > 0 ?`${currencyConverter(price)} )`:"" }
                 </div>
                 <div className="flex items-center gap-2 text-xs">{artist.rating.toFixed(1)}<Star size={12} fill='#ffd000' color='#ffc300' /></div>
               </SelectItem>

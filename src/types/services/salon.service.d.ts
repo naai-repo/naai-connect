@@ -49,7 +49,10 @@ declare type SingleSalonDataType = {
 };
 
 declare type SingleSalonArtistDataType = {
-  location: Location;
+  location: {
+    type:"point",
+    coordinates: number[];
+  };
   timing: {
     start: string;
     end: string;

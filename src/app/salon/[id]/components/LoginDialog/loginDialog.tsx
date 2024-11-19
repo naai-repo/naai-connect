@@ -1,4 +1,4 @@
-import { loginDialogSelector, loginStepSelector, phoneNumberSelector } from '@/recoil/auth.atom'
+import { loginDialogSelector, loginStepSelector, otpResSelector, phoneNumberSelector, userIdSelector } from '@/recoil/auth.atom'
 import React, { forwardRef, useImperativeHandle } from 'react'
 import { useRecoilState } from 'recoil'
 import {
@@ -12,11 +12,15 @@ import { ArrowLeftFromLine, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { OTPInputControle } from './Otp';
+import { useAuthServices } from '@/hooks/auth.hoook';
 
 const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
   const [open, setOpen] = useRecoilState(loginDialogSelector);
   const [phoneNumber, setPhoneNumber] = useRecoilState(phoneNumberSelector);
   const [loginStep,setLoginStep] = useRecoilState(loginStepSelector);
+  const [otpRes,setOtpRes] = useRecoilState(otpResSelector);
+  const [userId,setUserId] = useRecoilState(userIdSelector);
+  const authService = useAuthServices();
 
   const openSheet = () => {
     setOpen(true);
@@ -24,22 +28,25 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
   const closeSheet = () => {
     setOpen(false);
   }
-
   useImperativeHandle(ref, () => {
     return { openSheet, closeSheet };
   });
 
-  const getOpt = async ()=>{
-     
+  const getOTP = async ()=>{
+    let res = await authService.getOTP({phoneNumber});
+    console.log(res.data?.data);
+    if(res.status==200){
+      setOtpRes(res?.data as loginOTPResType );
+      setUserId(res.data?.data?.userId as string);
+      setLoginStep(1);
+    }
   }
 
   return (
-    <Dialog open={open} onOpenChange={(e) => {
-      if (!e) closeSheet();
-    }}>
+    <Dialog open={open}>
       <DialogContent className="w-fit flex flex-col pb-10 rounded-lg pt-2">
         <DialogHeader className="pb-5">
-          <span className='flex justify-end'>{loginStep==1 && <Button className='w-fit'><ArrowLeftFromLine /></Button>}</span>
+          <span className='flex justify-end'>{loginStep==1 && <Button onClick={()=>setLoginStep(0)} className='w-fit'><ArrowLeftFromLine /></Button>}</span>
           <h2 className='text-center text-lg text-nowrap text-black px-5'>Login or Create Account</h2>
         </DialogHeader>
         <DialogDescription>
@@ -58,7 +65,7 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
                 }
               }}
             />
-            <Button disabled={phoneNumber.length<10} onClick={()=>setLoginStep(1)}>Get OTP</Button></React.Fragment>
+            <Button disabled={phoneNumber.length<10} onClick={()=>{getOTP()}}>Get OTP</Button></React.Fragment>
             : <OTPInputControle/>
             }
           </div>
