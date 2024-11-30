@@ -7,3 +7,7 @@ declare type authOTPController = responseWrapperType & {
 declare type authVerifyController = responseWrapperType & {
   data?:verifyUserRes
 }
+
+declare type UserDataController = responseWrapperType & {
+  data?:UserDataresType
+}

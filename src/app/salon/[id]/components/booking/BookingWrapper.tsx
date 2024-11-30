@@ -17,6 +17,7 @@ import ArtistSelect from './components/ArtistSelect';
 import Progress from './components/Progress';
 import SlotWrapper from './components/timeSlot/SlotWrapper';
 import { getCartServicesSelector, resetCartServicesSelector, selectedServiceSelector } from '@/recoil/salon.atom';
+import MakeAppointment from './components/makeAppointment/MakeAppointment';
 
 const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   const [open, setOpen] = useRecoilState(bookingDialogSelector);
@@ -58,11 +59,11 @@ const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
         </DialogHeader>
         <DialogDescription className='overflow-y-auto scrollbar-hide mb-24'>
         <div>
-          {progress == 1 ? <ArtistSelect /> : progress == 2?<SlotWrapper/>:progress==3}
+          {progress == 1 ? <ArtistSelect /> : progress == 2?<SlotWrapper/>:progress==3?<MakeAppointment/>:progress==4}
         </div>
         </DialogDescription>
           <DialogFooter className='fixed bottom-5 w-[94%] right-[3%]'>
-          <Cart/>
+          {progress<3 && <Cart/>}
       </DialogFooter>
       </DialogContent>
     </Dialog>

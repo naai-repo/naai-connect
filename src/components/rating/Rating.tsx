@@ -7,7 +7,7 @@ interface StarRatingProps {
 
 const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   return (
-      <div className="flex items-center bg-green-500 text-white font-semibold rounded-md px-2 py-1 space-x-1">
+      <div className="flex items-center bg-green-500 text-white font-semibold rounded-md px-2 py-1 space-x-1 w-fit h-fit">
         <span className="text-sm">{rating.toFixed(1)}</span>
         <Star className="text-white" size={14} fill="currentColor" />
       </div>

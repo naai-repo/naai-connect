@@ -7,7 +7,7 @@ const AllArtistCarousel = () => {
 
   const allArtists = useRecoilValue(artistsSelector);
   return (
-    <div className='flex gap-2 overflow-x-auto scrollbar-hide'>
+    <div className='flex flex-col gap-2 pt-4'>
       {allArtists.map((artist)=>(
         <SingleArtist key={artist.id} artist={artist}/>
       ))}

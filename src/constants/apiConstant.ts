@@ -7,4 +7,7 @@ export default class API_CONSTANTS {
   static getTimeSlots = this.BASE_URL+"/appointments/schedule";
   static getUserOtp = this.BASE_URL+ "/customer/user/login";
   static verifyUserOtp = this.BASE_URL+ "/customer/otp/verify";
+  static makeAppointment = this.BASE_URL + "/appointments/book";
+  static confirmAppointment = this.BASE_URL + "/appointments/confirm";
+  static getUserData = this.BASE_URL + "/customer/user/<USERID>";
 }

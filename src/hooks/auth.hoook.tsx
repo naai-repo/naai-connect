@@ -18,5 +18,13 @@ export function useAuthServices() {
       throw errorResponse({message: error.toString()});
     }
   }
-  return {getOTP,verifyOTP}
+  const getUserData = async (userId:string):Promise<UserDataController>=>{
+    try {
+      let res = await Auth.getUserData(userId);
+      return successResponse<typeof res>({ data: res });
+    } catch (error:any) {
+      throw errorResponse({message: error.toString()});
+    }
+  }
+  return {getOTP,verifyOTP,getUserData}
 }

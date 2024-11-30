@@ -11,5 +11,24 @@ export function useBookingService() {
       throw errorResponse({message: error.toString()});
     }
   }
-  return {getTimeSlots}
+
+  const makeAppointment = async (payload:MakeAppointmentPayload,token:string):Promise<MakeAppointmentController>=>{
+    try {
+      let res = await Booking.makeAppointment(payload,token);
+      return successResponse<typeof res>({ data: res });
+    } catch (error:any) {
+      throw errorResponse({message: error.toString()});
+    }
+  }
+
+  const confirmAppointment = async (payload:MakeAppointmentResType,token:string):Promise<ConfirmAppointmentController>=>{
+    try {
+      let res = await Booking.confirmAppointment(payload,token);
+      return successResponse<typeof res>({ data: res });
+    } catch (error:any) {
+      throw errorResponse({message: error.toString()});
+    }
+  }
+  
+  return {getTimeSlots , makeAppointment, confirmAppointment}
 }

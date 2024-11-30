@@ -30,6 +30,12 @@ declare type verifyUserRes = {
   };
 };
 
+declare type UserDataresType = {
+  status: string;
+  message: string;
+  data: userDataType
+}
+
 declare type verifyUserPayload = {
   userId: string;
   otp: string;

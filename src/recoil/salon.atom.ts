@@ -135,6 +135,7 @@ export const categorySelector = selector({
     }));
   },
 });
+
 // filters
 export const filtersFalterFieldSelector = selectorFamily<
   filterState[filterFalterKeysType] | undefined,
@@ -153,6 +154,27 @@ export const filtersFalterFieldSelector = selectorFamily<
       set(salonAtom, (prev) => ({
         ...prev,
         filterFalter: { ...prev.filterFalter, [field]: val },
+      }));
+    },
+});
+
+export const filtersFieldSelector = selectorFamily<
+  filterState[filterFalterKeysType] | undefined,
+  filterFalterKeysType
+>({
+  key: "filtersFieldSelector",
+  get:
+    (field) =>
+    ({ get }) => {
+      const salonData = get(salonAtom);
+      return salonData.filters[field] ?? undefined;
+    },
+  set:
+    (field) =>
+    ({ set }, val) => {
+      set(salonAtom, (prev) => ({
+        ...prev,
+        filters: { ...prev.filters, [field]: val },
       }));
     },
 });
@@ -176,6 +198,7 @@ export const ApplyFilterSelector = selector({
   }
 })
 
+
 export const resetFilterSelector = selector({
   key: "resetFilter",
   get: ({ get }) => {},
@@ -189,7 +212,7 @@ export const resetFilterSelector = selector({
     },
 });
 
-
+// service search
 export const serviceSesrchSelector = selector({
   key:"serviceSesrchSelector",
   get:({get})=> {
@@ -203,6 +226,20 @@ export const serviceSesrchSelector = selector({
       filters: { ...prev.filters, search: val as string},
     }))
   }
+})
+
+// Artist Services getter
+export const artistServicesSelector = selectorFamily<SingleSalonServiceDataType[],string>({
+  key: "artistServicesSelector",
+  get:(id)=>({get})=>{
+    const salonData = get(salonAtom);
+    const salonServices = salonData?.singleSalonData?.services ?? [];
+    const foundArtist = salonData.singleSalonData?.artists.find(artist=>artist.id === id) as SingleSalonArtistDataType;
+    const artistServices = salonServices.filter((service)=>{
+      return foundArtist?.services?.find(artistService=> artistService.serviceId === service.id) ?? [];
+    })
+    return artistServices;
+  },
 })
 
 // cart functionality

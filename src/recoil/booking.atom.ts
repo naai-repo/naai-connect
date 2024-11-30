@@ -89,6 +89,52 @@ export const selectedArtistServiceSelector = selector<selectedArtistServiceType[
   }
 })
 
+// booking scedule selector
+export const bookingScheduleSelector = selector<TimeSlotResType | undefined>({
+  key:"bookingScheduleSelector",
+  get:({get})=>{
+    const data = get(bookingAtom);
+    return data.sceduleAppointment ?? undefined;
+  },
+  set:({set},newVal)=>{
+    set(bookingAtom,(prev)=>({
+      ...prev,
+      sceduleAppointment:newVal as TimeSlotResType 
+    }))
+  }
+})
+
+// makeAppointment selector
+export const makeAppointmentSelector = selector<MakeAppointmentResType | undefined>({
+  key:"makeAppointmentSelector",
+  get:({get})=>{
+    const data = get(bookingAtom);
+    return data.makeAppointment ?? undefined;
+  },
+  set:({set},newVal)=>{
+    set(bookingAtom,(prev)=>({
+      ...prev,
+      makeAppointment:newVal as MakeAppointmentResType
+    }))
+  }
+})
+
+// Appointed Artist selector
+export const appointedArtistSelector = selector<SingleSalonArtistDataType[] | undefined>({
+  key:"appointedArtistSelector",
+  get:({get})=>{
+    const data = get(bookingAtom);
+    return data.appointmentArtists ?? [];
+  },
+  set:({set},val)=>{
+    set(bookingAtom,(prev)=>({
+      ...prev,
+      appointmentArtists:val as SingleSalonArtistDataType[]
+    }))
+  }
+})
+
+// progress
 export const progressSelector = selector<number>({
   key:"progressSelector",
   get:({get})=>{

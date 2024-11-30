@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { cn, formatDateToDDMMYYYY, formateDateToString, removeTimeZoneOffsetToDate } from "@/lib/utils"
-import { availableSlotsSelector, bookingDateSelector, bookingSlotsSelector, progressSelector, selectedArtistServiceSelector } from "@/recoil/booking.atom"
+import { availableSlotsSelector, bookingDateSelector, bookingScheduleSelector, bookingSlotsSelector, progressSelector, selectedArtistServiceSelector } from "@/recoil/booking.atom"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { useEffect } from "react"
 import { useBookingService } from "@/hooks/booking.hooks"
@@ -28,6 +28,7 @@ export function DatePicker() {
   const selectedServiceArtist = useRecoilValue(selectedArtistServiceSelector);
   const setBookingSlot = useSetRecoilState(availableSlotsSelector);
   const bookingService = useBookingService();
+  const setScehdule = useSetRecoilState(bookingScheduleSelector);
 
   useEffect(() => {
     const load = async () => {
@@ -46,6 +47,7 @@ export function DatePicker() {
         }
         const token = localStorage.getItem("accessToken");
         let res = await bookingService.getTimeSlots(payload,token as string);
+        setScehdule(res.data);
         setBookingSlot(res.data.timeSlotsVisible);
       }catch{
         setBookingSlot([[""]]);

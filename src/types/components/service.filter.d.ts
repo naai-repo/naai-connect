@@ -7,3 +7,5 @@ declare type ServiceCategoryRefType = {openSheet: () => void, closeSheet: () => 
 declare type BookingSheetType = {openSheet: () => void, closeSheet: () => void};
 
 declare type LoginDialogRefType = {openSheet: () => void, closeSheet: () => void};
+
+declare type ArtistDialgReftype = {openSheet: () => void, closeSheet: () => void};

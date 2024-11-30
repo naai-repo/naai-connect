@@ -1,5 +1,5 @@
 import { currencyConverter } from '@/lib/utils';
-import { bookingDialogSelector, cartTotalSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
+import { bookingDialogSelector, bookingSlotsSelector, cartTotalSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
 import { getCartServicesSelector, resetCartServicesSelector } from '@/recoil/salon.atom';
 import { ArrowRightFromLine, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -57,7 +57,7 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div className='flex justify-between items-center w-full justify-self-center relative p-5 shadow-md z-30 bg-[#fbfbfb] border border-gray-600 rounded-lg'>
+    <div className='flex justify-between items-center w-full justify-self-center relative p-5 shadow-md z-50 bg-[#fbfbfb] border border-gray-600 rounded-lg'>
       <div className='flex flex-col text-base text-start font-semibold'>
         <span className='text-base text-gray-600'>Total</span>
         <div>
@@ -91,7 +91,7 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({userId, progress, onProg
   const selectedArtistService = useRecoilValue(selectedArtistServiceSelector);
   const cartServices = useRecoilValue(getCartServicesSelector);
   const [bookingDialg,setbookingDialog] = useRecoilState(bookingDialogSelector);
-  const router = useRouter();
+  const selectedSlot = useRecoilValue(bookingSlotsSelector)
 
   useEffect(() => {
     if (progress === 0) setDisplayText("Select Artist");
@@ -111,8 +111,8 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({userId, progress, onProg
       if(selectedArtistService.length==cartServices.length) return false;
       return true;
     }
-    else if(progress === 2){
-      return true;
+    else if(progress === 2 && selectedSlot.length>0){
+      return false;
     }
     return true;
   }

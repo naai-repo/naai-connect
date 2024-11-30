@@ -11,6 +11,7 @@ export const userAtom = atom({
     openDialog:false,
   } as User
 });
+
 // userid getter
 export const userIdSelector = selector<string | undefined >({
   key: 'getUserId',
@@ -26,9 +27,24 @@ export const userIdSelector = selector<string | undefined >({
       }
     }))
   }
+});
+
+// user data selector
+export const userDataSelector = selector<userDataType | undefined >({
+  key: 'userDataSelector',
+  get: ({ get }) => {
+    const user = get(userAtom);
+    return user.userData ?? undefined;
+  },
+  set:({set},val)=>{
+    set(userAtom,prev=>({
+      ...prev,
+      userData:val as userDataType
+    }))
+  }
 })
 
-//userdata selector
+//otp response selector
 export const otpResSelector = selector<loginOTPResType>({
   key: 'otpRes',
   get: ({ get }) => {

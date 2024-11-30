@@ -3,12 +3,15 @@ declare type bookingAtomTypr = {
   selectedServices: SingleSalonServiceDataType[];
   artistSelectionType: artistSelectionType;
   selectedArtistService: selectedArtistServiceType[];
+  sceduleAppointment?:TimeSlotResType
   cartTotal: cartTotalType;
   availableSlots:string[][]
   openDialoge:boolean;
   selectedDate: Date;
-  selectedTime:string[];
-  artistNotAvailable:boolean
+  selectedTime?:string[];
+  artistNotAvailable:boolean;
+  makeAppointment?:MakeAppointmentResType;
+  appointmentArtists?:SingleSalonArtistDataType[]
 };
 declare type cartTotalType = {
   original: number;

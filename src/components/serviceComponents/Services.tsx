@@ -7,11 +7,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import Searchbar from '../../app/salon/[id]/components/Filter/FilterCategories'
 import { cn } from '@/lib/utils'
+import { Card } from '../ui/card'
 
 const Services = ({ from }: { from: string }) => {
   const pureServices = useRecoilValue(pureServiceSelector);
   const [services, setServices] = useRecoilState(serviceSelector);
-  const ServiceFilterRef = useRef<ServiceFilterRefType>(null);
   const [filterCount, setFilterCount] = useState(0);
   const filter = useRecoilValue(filterSelector);
 
@@ -47,16 +47,8 @@ const Services = ({ from }: { from: string }) => {
   }, [filter]);
 
   return (
-    <div className='pt-4 w-full'>
-      <Filter ref={ServiceFilterRef} />
-      <div className={cn('flex justify-between items-center pb-3 pt-3 bg-[#fbfbfb] sticky', from == "hero" ? 'top-[14.8rem] md:top-[10rem]' : "top-28 px-1")}>
-        <h1 className='font-bold text-lg'>Services</h1>
-        <div className='flex items-center gap-2'>
-          <SlidersHorizontal className='rotate-90' onClick={() => ServiceFilterRef.current?.openSheet()} />
-          <Searchbar />
-        </div>
-      </div>
-      <div className='flex flex-col gap-2 px-1 pt-4'>
+    <div className=' w-full'>
+      <div className={cn('flex flex-col gap-2 px-1 pt-4',from=="artist" && 'pt-56')}>
         {services.map(service => (
           <SingleService key={service.id} service={service} />
         ))}

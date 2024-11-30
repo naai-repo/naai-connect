@@ -35,9 +35,15 @@ export function formatDateToDDMMYYYY(date: Date): string {
   return `${day}-${month}-${year}`;
 }
 
+export function formatDate(date: Date | string, ): string {
+  const options: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short", year: "2-digit" }
+  let dateFormate = new Date(date)
+  return dateFormate.toLocaleDateString("en-US", options);
+}
+
 
 export const formatTimeTo12Hour = (time: string) => {
-  const [hours, minutes] = time.split(':').map(Number);
+  const [hours, minutes] = time?.split(':').map(Number);
   const adjustedHours = hours % 12 || 12; // Convert 0 to 12 for midnight
   return `${adjustedHours}:${minutes.toString().padStart(2, '0')}`;
 };

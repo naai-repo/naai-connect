@@ -25,5 +25,17 @@ export default class Auth {
       }
     })
   }
+
+  static getUserData = (userId:string)=>{
+    return new Promise<UserDataresType> (async (resolve,reject)=>{
+      try {
+        let res = await axios.get(API_CONSTANTS.getUserData.replace("<USERID>",userId));
+        if (res?.data?.status == "failed") throw res.data.message;
+        return resolve(JSON.parse(JSON.stringify(res.data)) as UserDataresType)
+      } catch (error:any) {
+        return reject(error);
+      }
+    })
+  }
   
 }
