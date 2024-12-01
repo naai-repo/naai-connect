@@ -15,7 +15,7 @@ declare type allTimeSlotsType = {
 declare type orderType = {
   service: {
     reminderDays: number;
-    id: string;
+    _id: string;
     salonId: string;
     category: string;
     serviceTitle: string;
@@ -129,7 +129,7 @@ declare type ConfirmAppointmentResType = {
       taxIncluded: true;
     };
     membership: {
-      id: string;
+      _id: string;
       name: string;
       amount: number;
       cost: number;
@@ -140,7 +140,7 @@ declare type ConfirmAppointmentResType = {
       staffName: string;
     };
     package: {
-      id: string;
+      _id: string;
       name: string;
       amount: number;
       cost: number;
@@ -168,7 +168,7 @@ declare type ConfirmAppointmentResType = {
     };
     artistServiceMap: ArtistServiceMapType[];
     excludeGst: boolean;
-    id:string;
+    _id:string;
     duesCleared: [];
     products: [];
     payments: [];

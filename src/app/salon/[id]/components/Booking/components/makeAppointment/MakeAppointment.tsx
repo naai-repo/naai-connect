@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/Spinner';
+import { Spinner } from '@/components/ui/spinner';
 import { useBookingService } from '@/hooks/booking.hooks';
 import { cn, currencyConverter, formatDate, formatDateToDDMMYYYY, formatTimeTo12Hour, removeTimeZoneOffsetToDate } from '@/lib/utils';
 import { phoneNumberSelector, userDataSelector } from '@/recoil/auth.atom';
 import { bookingDateSelector, bookingScheduleSelector, bookingSlotsSelector, cartTotalSelector, makeAppointmentSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom'
 import { getCartServicesSelector, salonIdSelector, selectedServiceSelector } from '@/recoil/salon.atom';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import ConfirmBookingDialog from './ConfirmBooking';
 
 const MakeAppointment = () => {
   const progress = useRecoilValue(progressSelector);
@@ -20,6 +21,7 @@ const MakeAppointment = () => {
   const userData = useRecoilValue(userDataSelector);
   const totalBookingCost = useRecoilValue(cartTotalSelector);
   const cartServices = useRecoilValue(getCartServicesSelector);
+  const ConfirmBookingRef = useRef<ConfirmbookingRefType>(null);
 
   const makeAppointmentHandler = async () => {
     setLoading(true);
@@ -51,9 +53,8 @@ const MakeAppointment = () => {
     const token = localStorage.getItem("accessToken");
     let res = await bookingService.confirmAppointment(appointment as MakeAppointmentResType,token as string);
     if(res.status==200){
-      
+      ConfirmBookingRef.current?.openDialog();
     }
-
   }
 
   useEffect(() => {
@@ -64,6 +65,7 @@ const MakeAppointment = () => {
 
   return (
     <div className='w-full p-3'>
+      <ConfirmBookingDialog ref={ConfirmBookingRef}/>
       {loading ? <Spinner /> :
         <div className='flex flex-col gap-5'>
           <div className='flex p-2 shadow border rounded-md text-base font-semibold capitalize text-black'>
@@ -113,7 +115,9 @@ const MakeAppointment = () => {
         </div>
       }
       <div className='p-1 bg-background py-3 fixed bottom-0 w-[90%] '>
-        <Button className='w-full'>Confirm Booking</Button>
+        <Button onClick={()=>{
+          ConfirmBooking();
+      }} className='w-full'>Confirm Booking</Button>
       </div>
 
     </div>

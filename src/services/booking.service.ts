@@ -11,7 +11,7 @@ export default class Booking {
             },
           });
         if (res?.data?.status == "failed") throw res.data.message;
-        return resolve(JSON.parse( JSON.stringify(res.data).replaceAll("_id", "id")) as TimeSlotResType);
+        return resolve(JSON.parse( JSON.stringify(res.data)) as TimeSlotResType);
       } catch (error: any) {
         return reject(error);
       }
@@ -27,7 +27,7 @@ export default class Booking {
             },
           });
         if (res?.data?.status == "failed") throw res.data.message;
-        return resolve(JSON.parse( JSON.stringify(res.data).replaceAll("_id", "id")) as MakeAppointmentResType)
+        return resolve(JSON.parse( JSON.stringify(res.data)) as MakeAppointmentResType)
       } catch (error:any) {
         return reject(error);
       }
@@ -43,7 +43,7 @@ export default class Booking {
             },
           });
         if (res?.data?.status == "failed") throw res.data.message;
-        return resolve(JSON.parse( JSON.stringify(res.data).replaceAll("_id", "id")) as ConfirmAppointmentResType);
+        return resolve(JSON.parse( JSON.stringify(res.data)) as ConfirmAppointmentResType);
       } catch (error:any) {
         return reject(error);
       }
