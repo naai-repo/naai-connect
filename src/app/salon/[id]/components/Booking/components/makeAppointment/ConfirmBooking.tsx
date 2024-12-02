@@ -30,7 +30,7 @@ const ConfirmBookingDialog = forwardRef<ConfirmbookingRefType>(({ }, ref) => {
       <Dialog open={data.open} onOpenChange={(e) => {
       if (data.open != e) setData({ ...data, open: e });
     }}>
-        <DialogContent>
+        <DialogContent className='w-[80%] md:w-auto'>
           <DialogHeader>
             <DialogDescription>
               <div className="checkbox-wrapper">
@@ -38,6 +38,9 @@ const ConfirmBookingDialog = forwardRef<ConfirmbookingRefType>(({ }, ref) => {
                 <Label htmlFor="_checkbox-26">
                   <div className="tick_mark"></div>
                 </Label>
+              </div>
+              <div className='pt-5 text-xl font-semibold text-center'>
+                Booking Confirmed
               </div>
             </DialogDescription>
           </DialogHeader>

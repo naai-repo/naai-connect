@@ -10,7 +10,7 @@ import {
 
 import Cart from '@/components/demoCart/cart';
 import { Button } from '@/components/ui/button';
-import { bookingDialogSelector, cartTotalSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
+import { bookingDateSelector, bookingDialogSelector, bookingSlotsSelector, cartTotalSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
 import { Variable, X } from 'lucide-react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ArtistSelect from './components/ArtistSelect';
@@ -24,12 +24,16 @@ const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   const [progress, setProgress] = useRecoilState(progressSelector);
   const setSelctedArtistService = useSetRecoilState(selectedArtistServiceSelector);
   const resetCart = useSetRecoilState(resetCartServicesSelector);
+  const setBookingDate = useSetRecoilState(bookingDateSelector);
+  const setBookingSlot = useSetRecoilState(bookingSlotsSelector);
 
   const openSheet = () => {
     setOpen(true);
   }
   const closeSheet = () => {
     setSelctedArtistService([]);
+    setBookingDate(new Date());
+    setBookingSlot([]);
     resetCart();
     setProgress(0);
     setOpen(false);
@@ -40,9 +44,7 @@ const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   });
 
   return (
-    <Dialog open={open} onOpenChange={(e) => {
-      if (!e) closeSheet();
-    }}>
+    <Dialog open={open}>
       <DialogContent className="h-[100%] max-w-[100%] sm:h-[90%] sm:max-w-[60%] flex flex-col pt-0 px-2 sm:p-4 ">
         <DialogHeader className="flex items-center bg-white pb-2">
           <div className='flex justify-end w-full'>

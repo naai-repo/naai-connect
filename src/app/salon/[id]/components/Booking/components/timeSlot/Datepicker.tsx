@@ -93,7 +93,7 @@ export function DatePicker() {
           </Select>
           <div className="rounded-md border">
             <Calendar mode="single" selected={selectedDate} onSelect={(e) => setSelectedDate(e as Date)} disabled={(date) =>
-              date < new Date() || date < new Date("1900-01-01")
+              date < new Date() 
             } />
           </div>
         </PopoverContent>

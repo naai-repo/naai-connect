@@ -23,14 +23,11 @@ import Searchbar from "../Filter/FilterCategories";
 
 export const ArtistProfile = forwardRef<ArtistDialgReftype>(({ }, ref) => {
   const [open, setOpen] = useRecoilState(ArtistDialgSelector);
-
-
   const id = useRecoilValue(ArtistIdSelector);
   const selectedArtist = useRecoilValue(artistByIdSelector(id));
   const salonData = useRecoilValue(singleSalonDataSelector);
   const artistServices = useRecoilValue(artistServicesSelector(id));
   const allServices = useRecoilValue(pureServiceSelector)
-  
   const setServices = useSetRecoilState(serviceSelector);
 
   const openSheet = () => {

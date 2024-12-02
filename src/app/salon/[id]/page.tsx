@@ -41,7 +41,6 @@ const DynamicPage = () => {
     setUserData(res?.data?.data);
   }
 
-
   useEffect(()=>{
     setLoading(true);
     setSalonId(id);

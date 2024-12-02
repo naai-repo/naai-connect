@@ -3,10 +3,10 @@ import { Spinner } from '@/components/ui/spinner';
 import { useBookingService } from '@/hooks/booking.hooks';
 import { cn, currencyConverter, formatDate, formatDateToDDMMYYYY, formatTimeTo12Hour, removeTimeZoneOffsetToDate } from '@/lib/utils';
 import { phoneNumberSelector, userDataSelector } from '@/recoil/auth.atom';
-import { bookingDateSelector, bookingScheduleSelector, bookingSlotsSelector, cartTotalSelector, makeAppointmentSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom'
-import { getCartServicesSelector, salonIdSelector, selectedServiceSelector } from '@/recoil/salon.atom';
+import { bookingDateSelector, bookingDialogSelector, bookingScheduleSelector, bookingSlotsSelector, cartTotalSelector, makeAppointmentSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom'
+import { getCartServicesSelector, resetCartServicesSelector, salonIdSelector, selectedServiceSelector } from '@/recoil/salon.atom';
 import React, { useEffect, useRef, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import ConfirmBookingDialog from './ConfirmBooking';
 
 const MakeAppointment = () => {
@@ -22,6 +22,12 @@ const MakeAppointment = () => {
   const totalBookingCost = useRecoilValue(cartTotalSelector);
   const cartServices = useRecoilValue(getCartServicesSelector);
   const ConfirmBookingRef = useRef<ConfirmbookingRefType>(null);
+  const setOpen = useSetRecoilState(bookingDialogSelector);
+  const setProgress = useSetRecoilState(progressSelector);
+  const setSelctedArtistService = useSetRecoilState(selectedArtistServiceSelector);
+  const resetCart = useSetRecoilState(resetCartServicesSelector);
+  const setBookingDate = useSetRecoilState(bookingDateSelector);
+  const setBookingSlot = useSetRecoilState(bookingSlotsSelector);
 
   const makeAppointmentHandler = async () => {
     setLoading(true);
@@ -54,6 +60,12 @@ const MakeAppointment = () => {
     let res = await bookingService.confirmAppointment(appointment as MakeAppointmentResType,token as string);
     if(res.status==200){
       ConfirmBookingRef.current?.openDialog();
+      setSelctedArtistService([]);
+      setBookingDate(new Date());
+      setBookingSlot([]);
+      resetCart();
+      setProgress(0);
+      setOpen(false);
     }
   }
 
