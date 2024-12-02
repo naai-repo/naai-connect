@@ -46,8 +46,8 @@ const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   return (
     <Dialog open={open}>
       <DialogContent className="h-[100%] max-w-[100%] sm:h-[90%] sm:max-w-[60%] flex flex-col pt-0 px-2 sm:p-4 ">
-        <DialogHeader className="flex items-center bg-white pb-2">
-          <div className='flex justify-end w-full'>
+        <DialogHeader className="flex items-center bg-white py-2">
+          <div className='flex justify-end w-full '>
           <Button variant="outline" className="py-4 px-2" size="sm" onClick={(e) => {
             closeSheet();
           }}>

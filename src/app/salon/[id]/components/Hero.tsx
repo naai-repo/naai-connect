@@ -76,7 +76,7 @@ const Hero = () => {
       <BookingWrapper ref={bookingRef} />
       <ArtistProfile ref={artistProfileref} />
       <LoginDialog />
-      <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-14 md:top-0 bg-[#fbfbfb] z-30'>
+      <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-14 bg-[#fbfbfb] z-30'>
         <div className='flex justify-between w-full'>
           <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name}</h2>
           <StarRating rating={salonData?.data.rating ?? 0} />
@@ -133,7 +133,6 @@ const Hero = () => {
       <div className='w-full pt-3'>
         <Wrapper/>
       </div>
-      
       {/* <div className='max-w-[94vw] sm:max-w-[90vw] px-1 pt-4'>
         <AllArtistCarousel />
       </div> */}

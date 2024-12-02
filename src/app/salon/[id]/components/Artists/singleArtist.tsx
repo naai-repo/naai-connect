@@ -5,12 +5,12 @@ import React from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ArtistDialgSelector, ArtistIdSelector } from '@/recoil/artist.atom'
 import { singleSalonDataSelector } from '@/recoil/salon.atom'
+import { useRouter } from 'next/navigation'
 
 const SingleArtist = ({artist}:{artist:SingleSalonArtistDataType}) => {
 
-  const setOpen =  useSetRecoilState(ArtistDialgSelector);
-  const setArtistId = useSetRecoilState(ArtistIdSelector);
   const salonData = useRecoilValue(singleSalonDataSelector);
+  const router = useRouter();
 
   const setArtist = ()=>{
     localStorage.setItem("selectedArtist",artist.id);
@@ -20,7 +20,7 @@ const SingleArtist = ({artist}:{artist:SingleSalonArtistDataType}) => {
   return (
     <div onClick={()=>{
       setArtist()
-      setOpen(true);
+      router.push(`/artist/${artist.id}`)
     }} className='border min-w-fit capitalize shadow-md rounded-md flex justify-between gap-2 p-2'>
       <div className='flex gap-2 items-start'>
       {artist.imageUrl?.length>0?<img src={artist.imageUrl} alt={".png"} className='w-14 h-14 rounded-full'/>:

@@ -14,13 +14,13 @@ const Wrapper = () => {
   return (
     <div className='w-full bg-[#fbfbfb]'>
       <Tabs defaultValue="services" className="w-full">
-        <TabsList className='w-full border-b-2 border-black rounded-none bg-[#fbfbfb] sticky top-[15rem] md:top-[10rem] flex justify-start py-7'>
+        <TabsList className='w-full border-b-2 border-black rounded-none bg-[#fbfbfb] sticky top-[15rem] sm:top-[14rem] z-30 flex justify-start py-7'>
           <TabsTrigger className='text-base border-0 bg-transparent' value="services">Services</TabsTrigger>
           <TabsTrigger className='text-base border-0 bg-transparent' value="artists">Artists</TabsTrigger>
           <TabsTrigger className='text-base border-0 bg-transparent' value="reviews">Reviews</TabsTrigger>
         </TabsList>
         <TabsContent className='w-full' value="services">
-          <div className='sticky top-[18.6rem] md:top-[13.6rem] bg-[#fbfbfb] w-full pt-2'>
+          <div className='sticky top-[18.6rem] sm:top-[17.6rem] bg-[#fbfbfb] w-full pt-2'>
             <ServicesContent />
           </div>
           <Services from='hero' />
@@ -59,7 +59,7 @@ const ServicesContent = () => {
 
   return (
     <>
-      <div className='flex justify-between gap-2'>
+      <div className='flex justify-between gap-2 '>
         <div className='flex gap-2'>
           <Button onClick={()=>{handleGenderFilter("male")}}  variant={selectedGender=="male"?"secondary":"outline"} size={"icon"} className='w-fit px-2'>
             Men <Image className="h-6 w-6" src={MenIcon} alt="women" />

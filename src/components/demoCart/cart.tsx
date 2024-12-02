@@ -1,12 +1,11 @@
 import { currencyConverter } from '@/lib/utils';
+import { loginDialogSelector, userIdSelector } from '@/recoil/auth.atom';
 import { bookingDialogSelector, bookingSlotsSelector, cartTotalSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
-import { getCartServicesSelector, resetCartServicesSelector } from '@/recoil/salon.atom';
+import { getCartServicesSelector, resetCartServicesSelector, salonIdSelector } from '@/recoil/salon.atom';
 import { ArrowRightFromLine, X } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button } from '../ui/button';
-import { useRouter } from 'next/navigation';
-import { userIdSelector, loginDialogSelector } from '@/recoil/auth.atom';
 
 // Type definitions
 type ContinueButtonProps = {
@@ -14,6 +13,8 @@ type ContinueButtonProps = {
   progress: number;
   onProgressChange: () => void;
 };
+
+
 
 const Cart: React.FC = () => {
   const cartServices = useRecoilValue(getCartServicesSelector);
@@ -24,6 +25,7 @@ const Cart: React.FC = () => {
   const [bookingDialg,setbookingDialog] = useRecoilState(bookingDialogSelector);
   const selectedServicesArtist = useRecoilValue(selectedArtistServiceSelector);
   const userId = useRecoilValue(userIdSelector);
+  const salonId = useRecoilValue(salonIdSelector);
   const setOpenLoginDialog = useSetRecoilState(loginDialogSelector);
 
   useEffect(()=>{
@@ -120,7 +122,7 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({userId, progress, onProg
   return (
     <Button disabled={disableContinue()} onClick={()=>{
       if(!bookingDialg) setbookingDialog(true);
-      onProgressChange();
+        onProgressChange();
       }}>
       {displayText}
       <ArrowRightFromLine />

@@ -48,7 +48,7 @@ const Services = ({ from }: { from: string }) => {
 
   return (
     <div className=' w-full'>
-      <div className={cn('flex flex-col gap-2 px-1 pt-4',from=="artist" && 'pt-56')}>
+      <div className={cn('flex flex-col gap-2 px-1 pt-4')}>
         {services.map(service => (
           <SingleService key={service.id} service={service} />
         ))}

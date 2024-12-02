@@ -10,4 +10,5 @@ export default class API_CONSTANTS {
   static makeAppointment = this.BASE_URL + "/appointments/book";
   static confirmAppointment = this.BASE_URL + "/appointments/confirm";
   static getUserData = this.BASE_URL + "/customer/user/<USERID>";
+  static getArtistById = this.BASE_URL + "/partner/artist/single/<ARTIST_ID>";
 }

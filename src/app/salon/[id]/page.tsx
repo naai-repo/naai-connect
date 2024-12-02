@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import Hero from "./components/Hero";
 import { useAuthServices } from "@/hooks/auth.hoook";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const DynamicPage = () => {
   const params = useParams();
@@ -44,6 +45,7 @@ const DynamicPage = () => {
   useEffect(()=>{
     setLoading(true);
     setSalonId(id);
+    localStorage.setItem("salonId",id);
     let userId = localStorage.getItem("userId");
     setuserId(userId ?? undefined)
     if(userId) getUserData(userId);
@@ -74,12 +76,14 @@ const DynamicPage = () => {
     }} mainWrapper={{
       className : "grid flex-1 items-start gap-4 p-2 pt-0 sm:px-6 sm:py-0 md:gap-4 h-full w-full"
     }}>
+      {loading?<Skeleton/>:
       <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10">
         <div className="w-[94%] right-[3%] fixed bottom-5">
           <Cart/>
         </div>
         <Hero/>
       </div>
+    }
     </MainWrapper>
   );
 };

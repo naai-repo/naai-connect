@@ -4,7 +4,8 @@ export const ArtistAtom = atom<ArtistAtomType>({
   key: 'ArtistAtom',
   default: {
     id: '',
-    artistDialg:false
+    artistDialg:false,
+    selectedArtist: {} as SingleSalonArtistDataType
   }
 })
 
@@ -27,6 +28,18 @@ export const ArtistDialgSelector = selector<boolean>({
     set(ArtistAtom, (prev) => ({
       ...prev,
       artistDialg: newValue as boolean
+    }))
+  }
+})
+
+
+export const ArtistByIdSelector = selector<SingleSalonArtistDataType>({
+  key: 'ArtistByIdSelector',
+  get: ({ get }) => {return get(ArtistAtom).selectedArtist ?? {} as SingleSalonArtistDataType},
+  set: ({ set }, newValue) => {
+    set(ArtistAtom, (prev) => ({
+      ...prev,
+      selectedArtist: newValue as SingleSalonArtistDataType
     }))
   }
 })
