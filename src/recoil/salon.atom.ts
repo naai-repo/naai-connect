@@ -38,6 +38,25 @@ export const salonIdSelector = selector<string>({
   },
 });
 
+// artist selector
+export const artistsSelector = selector<SingleSalonArtistDataType[]>({
+  key: "artistsSelector",
+  get: ({ get }) => {
+    const salonData = get(salonAtom);
+    return salonData.singleSalonData?.artists ?? [];
+  }
+})
+
+// artist by id
+export const artistByIdSelector = selectorFamily<SingleSalonArtistDataType,string>({
+  key:"artistByIdSelector",
+  get:(id)=>({get})=>{
+    const salonData = get(salonAtom);
+    const artist = salonData.singleSalonData?.artists?.find((artist)=>artist.id===id);
+    return artist ?? null;
+  },
+})
+
 export const singleSalonDataSelector = selector<salonData | undefined>({
   key: "singleSalonDataSelector",
   get: ({ get }) => {
@@ -116,6 +135,7 @@ export const categorySelector = selector({
     }));
   },
 });
+
 // filters
 export const filtersFalterFieldSelector = selectorFamily<
   filterState[filterFalterKeysType] | undefined,
@@ -134,6 +154,27 @@ export const filtersFalterFieldSelector = selectorFamily<
       set(salonAtom, (prev) => ({
         ...prev,
         filterFalter: { ...prev.filterFalter, [field]: val },
+      }));
+    },
+});
+
+export const filtersFieldSelector = selectorFamily<
+  filterState[filterFalterKeysType] | undefined,
+  filterFalterKeysType
+>({
+  key: "filtersFieldSelector",
+  get:
+    (field) =>
+    ({ get }) => {
+      const salonData = get(salonAtom);
+      return salonData.filters[field] ?? undefined;
+    },
+  set:
+    (field) =>
+    ({ set }, val) => {
+      set(salonAtom, (prev) => ({
+        ...prev,
+        filters: { ...prev.filters, [field]: val },
       }));
     },
 });
@@ -157,6 +198,7 @@ export const ApplyFilterSelector = selector({
   }
 })
 
+
 export const resetFilterSelector = selector({
   key: "resetFilter",
   get: ({ get }) => {},
@@ -170,7 +212,7 @@ export const resetFilterSelector = selector({
     },
 });
 
-
+// service search
 export const serviceSesrchSelector = selector({
   key:"serviceSesrchSelector",
   get:({get})=> {
@@ -184,6 +226,20 @@ export const serviceSesrchSelector = selector({
       filters: { ...prev.filters, search: val as string},
     }))
   }
+})
+
+// Artist Services getter
+export const artistServicesSelector = selectorFamily<SingleSalonServiceDataType[],string>({
+  key: "artistServicesSelector",
+  get:(id)=>({get})=>{
+    const salonData = get(salonAtom);
+    const salonServices = salonData?.singleSalonData?.services ?? [];
+    const foundArtist = salonData.singleSalonData?.artists.find(artist=>artist.id === id) as SingleSalonArtistDataType;
+    const artistServices = salonServices.filter((service)=>{
+      return foundArtist?.services?.find(artistService=> artistService.serviceId === service.id) ?? [];
+    })
+    return artistServices;
+  },
 })
 
 // cart functionality
@@ -201,22 +257,23 @@ export const selectedServiceSelector = selector<SingleSalonServiceDataType>({
   }
 })
 
-export const serviceAddToCartSelector = selector<string>({
+export const serviceAddToCartSelector = selector<SingleSalonServiceDataType>({
   key: "serviceAddToCartSelector",
   get: ({ get }) => {
-    return ""; 
+    return {} as SingleSalonServiceDataType; 
   },
-  set: ({ set }, id) => {
+  set: ({ set }, cartService) => {
+    let cartServicedup =  {...cartService} as SingleSalonServiceDataType
     set(salonAtom, (prev) => {
       const services = prev.singleSalonData?.services?.map(service => {
-        if (service.id === id) {
-          return { ...service, incart: true };
+        if (service.id === cartServicedup.id) {
+          return cartServicedup;
         }
         return service;
       });
       const showServices = prev.services.map((service)=>{
-        if (service.id === id) {
-          return { ...service, incart: true };
+        if (service.id === cartServicedup.id) {
+          return cartServicedup;
         }
         return service;
       })
@@ -231,20 +288,21 @@ export const serviceAddToCartSelector = selector<string>({
 });
 
 
-export const serviceRemoveFromCartSelector = selector<string>({
+export const serviceRemoveFromCartSelector = selector<SingleSalonServiceDataType>({
   key:"serviceRemoveFromCartSelector",
-  get:({get})=> {return ""},
-  set:({set},id)=>{
+  get:({get})=> {return {} as SingleSalonServiceDataType},
+  set:({set},cartService) => {
+    let cartServicedup =  {...cartService} as SingleSalonServiceDataType;
     set(salonAtom, (prev) => {
       let services = prev.singleSalonData.services.map(service=>{
-        if(service.id === id){
-          return { ...service, incart: false };
+        if(service.id === cartServicedup.id){
+          return cartServicedup
         }
         return service;
       })
       const showServices = prev.services.map((service)=>{
-        if (service.id === id) {
-          return { ...service, incart: false };
+        if (service.id === cartServicedup.id) {
+          return cartServicedup
         }
         return service;
       })
@@ -264,7 +322,9 @@ export const resetCartServicesSelector = selector({
   set:({set})=>{
     set(salonAtom, (prev) => ({
       ...prev,
-      services:prev.services.map(service=>({...service,incart:false})),
+      services:prev.services.map(service=>({...service,
+        variables:service.variables?.map(variable=>({...variable,selected:false})) || [],
+        incart:false})),
       singleSalonData: {
         ...prev.singleSalonData,
         services:prev.singleSalonData.services.map(service => ({...service, incart: false}))}

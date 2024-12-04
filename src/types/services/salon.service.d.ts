@@ -48,8 +48,11 @@ declare type SingleSalonDataType = {
   taxIncluded: true;
 };
 
-declare type SingleSlonArtistDataType = {
-  location: Location;
+declare type SingleSalonArtistDataType = {
+  location: {
+    type:"point",
+    coordinates: number[];
+  };
   timing: {
     start: string;
     end: string;
@@ -82,14 +85,7 @@ declare type SingleSalonServiceDataType = {
   description: string;
   targetGender: string;
   avgTime: number;
-  variables: {
-    variableType: string;
-    variableName: string;
-    variablePrice: number;
-    variableCutPrice: number;
-    variableTime: number;
-    id: string;
-  }[];
+  variables: ServiceVariableType[];
   basePrice: number;
   cutPrice: number;
   productsUsed: any[];
@@ -100,6 +96,16 @@ declare type SingleSalonServiceDataType = {
   createdAt: string;
   updatedAt: string;
 };
+
+declare type ServiceVariableType = {
+  variableType: string;
+  variableName: string;
+  variablePrice: number;
+  variableCutPrice: number;
+  variableTime: number;
+  id: string;
+  selected?:boolean;
+}
 
 declare type ArtistServiceDataType = {
   serviceId: string;

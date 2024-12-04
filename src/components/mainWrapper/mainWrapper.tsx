@@ -1,6 +1,5 @@
 "use client"
 import React,{ HTMLAttributes } from "react"
-import {ExpandableNavigation} from "./SideNavigation"
 import MainHeader from "./mainHeader"
 
 interface MainWrapperProps {
@@ -15,8 +14,6 @@ const MainWrapper :React.FC<MainWrapperProps> = ({children,parentWrapper,mainWra
   return (
     <>
       <div className="flex h-full w-full flex-col bg-muted/40">
-        <ExpandableNavigation></ExpandableNavigation>
-
         <div {...parentWrapper}>
           <MainHeader name={name} externalHeaderElements={externalHeaderElements}></MainHeader>
           <main {...mainWrapper}>

@@ -1,0 +1,75 @@
+import { forwardRef, useImperativeHandle } from 'react';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader
+} from "@/components/ui/dialog";
+
+import Cart from '@/components/demoCart/cart';
+import { Button } from '@/components/ui/button';
+import { bookingDateSelector, bookingDialogSelector, bookingSlotsSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
+import { resetCartServicesSelector } from '@/recoil/salon.atom';
+import { X } from 'lucide-react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import ArtistSelect from './components/ArtistSelect';
+import MakeAppointment from './components/makeAppointment/MakeAppointment';
+import Progress from './components/Progress';
+import SlotWrapper from './components/timeSlot/SlotWrapper';
+
+const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
+  const [open, setOpen] = useRecoilState(bookingDialogSelector);
+  const [progress, setProgress] = useRecoilState(progressSelector);
+  const setSelctedArtistService = useSetRecoilState(selectedArtistServiceSelector);
+  const resetCart = useSetRecoilState(resetCartServicesSelector);
+  const setBookingDate = useSetRecoilState(bookingDateSelector);
+  const setBookingSlot = useSetRecoilState(bookingSlotsSelector);
+
+  const openSheet = () => {
+    setOpen(true);
+  }
+  const closeSheet = () => {
+    setSelctedArtistService([]);
+    setBookingDate(new Date());
+    setBookingSlot([]);
+    resetCart();
+    setProgress(0);
+    setOpen(false);
+  }
+
+  useImperativeHandle(ref, () => {
+    return { openSheet, closeSheet };
+  });
+
+  return (
+    <Dialog open={open}>
+      <DialogContent className="h-[100%] max-w-[100%] sm:h-[90%] sm:max-w-[60%] flex flex-col pt-0 px-2 sm:p-4 ">
+        <DialogHeader className="flex items-center bg-white py-2">
+          <div className='flex justify-end w-full '>
+          <Button variant="outline" className="py-4 px-2" size="sm" onClick={(e) => {
+            closeSheet();
+          }}>
+            <X size={18} ></X>
+          </Button>
+          </div>
+          
+          <div className='w-full '>
+            <Progress />
+        </div>
+        </DialogHeader>
+        <DialogDescription className='overflow-y-auto scrollbar-hide mb-24'>
+        <div>
+          {progress == 1 ? <ArtistSelect /> : progress == 2?<SlotWrapper/>:progress==3?<MakeAppointment/>:progress==4}
+        </div>
+        </DialogDescription>
+          <DialogFooter className='fixed bottom-5 w-[94%] right-[3%]'>
+          {progress<3 && <Cart/>}
+      </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+})
+
+export default BookingWrapper

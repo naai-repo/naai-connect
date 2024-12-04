@@ -1,22 +1,25 @@
+import StarRating from '@/components/rating/Rating'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { isSalonOpenSelector, singleSalonDataSelector } from '@/recoil/salon.atom'
-import { CalendarClock, MapPinned, PhoneCall } from 'lucide-react'
-import { useEffect } from 'react'
+import { artistsSelector, isSalonOpenSelector, singleSalonDataSelector } from '@/recoil/salon.atom'
+import { MapPinned, PhoneCall, Share2 } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import Services from '../../../../components/serviceComponents/Services'
+import BookingWrapper from './Booking/BookingWrapper'
 import ImageCarousel from './ImageCarousel'
-import StarRating from '@/components/rating/Rating'
-import Services from './Services'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import LoginDialog from './LoginDialog/loginDialog'
+import AllArtistCarousel from './Artists/carouselWrapper'
+import { ArtistProfile } from './Artists/ArtistProfile'
+import Searchbar from './Filter/FilterCategories'
+import Wrapper from './Wrapper'
+
 
 const Hero = () => {
   const salonData = useRecoilValue(singleSalonDataSelector);
   const [isopen, setIsOpen] = useRecoilState(isSalonOpenSelector);
+  const bookingRef = useRef<BookingSheetType>(null);
+  const artistProfileref = useRef<ArtistDialgReftype>(null);
 
   useEffect(() => {
     const openingTime = new Date();
@@ -34,7 +37,7 @@ const Hero = () => {
     } else {
       setIsOpen(false);
     }
-  }, [salonData, setIsOpen]);
+  }, [salonData]);
 
   function formatTimeTo12Hour(time24: string): string {
     if (!time24) return "";
@@ -69,8 +72,11 @@ const Hero = () => {
   };
 
   return (
-    <div className='w-full p-2 sm:p-5 flex flex-col'>
-      <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-14 md:top-0 bg-[#fbfbfb] z-30'>
+    <div className='w-full px-1 pt-0 pb-0 flex flex-col'>
+      <BookingWrapper ref={bookingRef} />
+      <ArtistProfile ref={artistProfileref} />
+      <LoginDialog />
+      <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-[3.3rem] bg-[#fbfbfb] z-30'>
         <div className='flex justify-between w-full'>
           <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name}</h2>
           <StarRating rating={salonData?.data.rating ?? 0} />
@@ -88,6 +94,28 @@ const Hero = () => {
           <span className='flex gap-1 items-center'>
             <Button size={"sm"} onClick={openGoogleMaps} variant={"outline"}><MapPinned className='text-blue-500' size={18} /> Direction</Button>
           </span>
+          <span>
+            <Button size={"sm"} variant={"outline"} onClick={() => {
+              if (navigator.share) {
+                navigator
+                  .share({
+                    title: salonData?.data?.name ?? "Salon Profile",
+                    text: `Check out this Salon : ${salonData?.data?.name}`,
+                    url: window.location.href,
+                  })
+                  .then(() => console.log("Successfully shared"))
+                  .catch((error) => console.error("Error sharing:", error));
+              } else {
+                // Fallback: Copy to clipboard
+                navigator.clipboard
+                  .writeText(window.location.href)
+                  .then(() => alert("URL copied to clipboard"))
+                  .catch(() => alert("Failed to copy URL"));
+              }
+            }}>
+              <Share2 className='text-blue-500' size={18} /> Share
+            </Button>
+          </span>
           <span className='flex gap-1 items-center'>
             <Button onClick={() => window.open(`tel:${salonData?.data.phoneNumber}`, "_self")}
               size={"sm"} variant={'outline'}><PhoneCall className='text-blue-500' size={18} /> {salonData?.data.phoneNumber}</Button>
@@ -102,17 +130,12 @@ const Hero = () => {
           <div className='md:hidden'><ImageCarousel images={salonData?.data?.images} /></div>
         </div>
       </div>
-      <Services />
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger className='capitalize fixed bottom-36 right-5 bg-green-500 rounded-full h-16 w-16'>
-            <CalendarClock className='ml-4 min-h-8 min-w-8 text-white'/>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Book Appointment</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <div className='w-full pt-3'>
+        <Wrapper/>
+      </div>
+      {/* <div className='max-w-[94vw] sm:max-w-[90vw] px-1 pt-4'>
+        <AllArtistCarousel />
+      </div> */}
     </div>
   )
 }
