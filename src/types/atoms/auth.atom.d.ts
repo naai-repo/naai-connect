@@ -4,10 +4,13 @@ declare type User = {
   userDetails: UserType;
   openDialog: boolean;
   userData?: userDataType;
+  hash:number
 };
 
 declare type loginFormType = {
   phoneNumber: string;
+  name:string,
+  gender:"male" | "female" | "not specified" | ""
   otp: string;
   step: number;
 };
@@ -91,3 +94,6 @@ declare type PackageMembershipType = {
   _id: string;
   startDate: string;
 };
+
+
+declare type userLoginFieldSelector = keyof loginFormType

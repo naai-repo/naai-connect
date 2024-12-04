@@ -1,14 +1,17 @@
-import { atom, selector} from 'recoil';
+import { atom, selector, selectorFamily} from 'recoil';
 
 export const userAtom = atom({
   key: 'user',
   default: {
     loginform:{
       phoneNumber:"",
+      name:"",
+      gender:"",
       otp:"",
       step:0
     },
     openDialog:false,
+    hash:5
   } as User
 });
 
@@ -90,6 +93,21 @@ export const phoneNumberSelector = selector<string>({
   }
 });
 
+// userInputFieldSelector
+export const userInputFieldSelector = selectorFamily<loginFormType[userLoginFieldSelector],userLoginFieldSelector>({
+  key: 'userInputField',
+  get: (field) => ({ get }) => {
+    const user = get(userAtom);
+    return user.loginform[field] ?? undefined;
+  },
+  set:(field)=>({set},val)=>{
+    set(userAtom,prev=>({
+      ...prev,
+      loginform:{...prev.loginform,[field]:val as loginFormType[userLoginFieldSelector]}
+    }))
+  }
+})
+
 // otp
 export const otpSelector = selector<string>({
   key: 'otp',
@@ -116,5 +134,14 @@ export const loginStepSelector = selector<number>({
       ...prev,
       loginform:{...prev.loginform,step:val as number}
     }))
+  }
+})
+
+// hash selector
+export const hashSelector = selector<number>({
+  key: 'hashSelector',
+  get: ({ get }) => {
+    const user = get(userAtom);
+    return user.hash ?? 0;
   }
 })

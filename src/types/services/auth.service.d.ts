@@ -10,6 +10,8 @@ declare type loginOTPResType = {
 
 declare type loginOtpPayload = {
   phoneNumber: string;
+  name:string,
+  gender:"male"|"female"|"not specified"
 };
 
 declare type verifyUserRes = {

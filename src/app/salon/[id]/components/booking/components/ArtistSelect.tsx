@@ -9,12 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn, currencyConverter } from '@/lib/utils';
-import { cartTotalSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
+import { cn, currencyConverter, Dummy } from '@/lib/utils';
+import { selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
 import { artistsSelector, getCartServicesSelector } from '@/recoil/salon.atom';
 import { Star, User, Users } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 
@@ -68,9 +68,12 @@ const SingleStaff = () => {
   const handleServicesArtist = (artist:SingleSalonArtistDataType)=>{
 
     const servicesArtist:selectedArtistServiceType[] = selectedServices.map((service)=>{
+      const selectedArtist = allArtists.find(art=>art.id==artist.id);
+      const artistService = selectedArtist?.services.find(s=>s.serviceId==service.id);
+      const artistToAssign = artistService?artist.id:Dummy.artist;
       return {
         service,
-        artist
+        artist:artistToAssign
       }
     })
 
@@ -78,7 +81,7 @@ const SingleStaff = () => {
   }
 
   return (
-    <RadioGroup className="max-h-44 md:max-h-32" defaultValue={selectedServiceArtist[0]?.artist?.id || ""}>
+    <RadioGroup className="max-h-44 md:max-h-32" defaultValue={selectedServiceArtist[0]?.artist || ""}>
       {filteredArtists.map((artist, ind) => (
         <div key={artist.id} className={cn('flex justify-between', ind != filteredArtists.length - 1 && 'border-b pb-2 pt-1')}>
           <div className="flex items-center space-x-4" onClick={() => handleServicesArtist(artist)}>
@@ -98,9 +101,10 @@ const SingleServiceArtistMultiSelect = () => {
   const selectedServices = useRecoilValue(getCartServicesSelector);
   const setSelectionType = useSetRecoilState(selctedArtistTypeSelector);
 
-  const filteredArtists = useMemo(()=>allArtists.filter(artist =>
-    artist.services.some(service => service.serviceId === selectedServices[0]?.id)
-  ),[selectedServices])
+  const filteredArtists = useMemo(()=>allArtists.filter(artist =>{
+    const artistServices = artist.services.map(service => (service.serviceId));
+    return selectedServices.some((selectedService) => artistServices.includes(selectedService.id))
+  }),[selectedServices])
 
   const getArtistPrice = (artist:SingleSalonArtistDataType,serviceToAssing:SingleSalonServiceDataType)=>{
     const service = artist.services.find((service)=>service.serviceId==serviceToAssing.id);
@@ -115,11 +119,12 @@ const SingleServiceArtistMultiSelect = () => {
     const artist = filteredArtists.find((art=>art.id===artistId));
     setSelectedServiceArtist((prevSelected) => {
       const existingIndex = prevSelected.findIndex((item) => item.service.id === serviceToAssign.id);
-  
+      
       if (existingIndex > -1) {
         const updatedSelected = [...prevSelected];
+         
         updatedSelected[existingIndex] = {
-          artist:artist as SingleSalonArtistDataType,
+          artist:artist?.id as string,
           service: serviceToAssign
         };
         return updatedSelected;
@@ -128,7 +133,7 @@ const SingleServiceArtistMultiSelect = () => {
       return [
         ...prevSelected,
         {
-          artist:artist as SingleSalonArtistDataType,
+          artist:artist?.id as string,
           service: serviceToAssign
         }
       ];
@@ -137,7 +142,7 @@ const SingleServiceArtistMultiSelect = () => {
 
   const getSelectedArtist = (service:SingleSalonServiceDataType):string=>{
     const data = selectedServiceArtist.find((artistService)=>artistService.service.id === service.id);
-    if(data) return data.artist.id;
+    if(data) return data.artist;
     return "";
   }
 
@@ -150,7 +155,7 @@ const SingleServiceArtistMultiSelect = () => {
               <Image className='h-8' src={service.targetGender === "male" ? MenIcon : WomenIcon} alt={"Gender.png"} />
               {service.serviceTitle}
             </div>
-            {currencyConverter(service.cutPrice)}
+            {service.variables.length>0?currencyConverter(service.variables.find(variable=>variable.selected)?.variableCutPrice ?? 0):service.cutPrice}
           </div>
           <Select defaultValue={getSelectedArtist(service)} onValueChange={(e)=>(handleArtistSelect(e,service))}>
             <SelectTrigger className="w-full py-5">

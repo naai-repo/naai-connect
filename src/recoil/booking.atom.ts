@@ -87,7 +87,7 @@ export const selectedArtistServiceSelector = selector<selectedArtistServiceType[
       selectedArtistService:val as selectedArtistServiceType[]
     }))
   }
-})
+});
 
 // booking scedule selector
 export const bookingScheduleSelector = selector<TimeSlotResType | undefined>({

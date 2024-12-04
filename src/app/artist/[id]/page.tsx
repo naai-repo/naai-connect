@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Profile from "../../../assets/Artist.svg";
 import React, { useEffect, useRef, useState } from 'react'
-import { artistByIdSelector, singleSalonDataSelector } from '@/recoil/salon.atom';
+import { singleSalonDataSelector } from '@/recoil/salon.atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import StarRating from '@/components/rating/Rating';
 import { Separator } from '@radix-ui/react-select';
@@ -32,6 +32,7 @@ const Page = () => {
   const [salonLoading,setSalonLoading] = useState(false);
   const salonId = localStorage.getItem("salonId");
   const setSalonData = useSetRecoilState(singleSalonDataSelector);
+  
   const getArtist = async () => {
       setLoading(true);
     try {
@@ -61,7 +62,6 @@ const Page = () => {
     if(id) getArtist();
   },[id])
 
-
   return (
     <MainWrapper name="Salon" parentWrapper={{
       className: "flex flex-col sm:px-4 sm:py-4  h-full"
@@ -72,7 +72,7 @@ const Page = () => {
       <BookingWrapper ref={bookingRef} />
         {loading?<Skeleton/>:
         <Card className="w-full border-0 shadow-none">
-          <CardHeader className="sticky top-0  bg-[#fbfbfb] w-full">
+          <CardHeader className="sticky top-12 bg-[#fbfbfb] w-full">
             <div className="flex items-center w-full gap-4">
               <div className="flex items-center justify-start w-fit flex-1">
                 {selectedArtist?.imageUrl?.length > 0 ? <img src={selectedArtist?.imageUrl} alt={".png"} className='min-w-24 min-h-24 rounded-full shadow-xl p-[1px]' /> :
@@ -122,7 +122,7 @@ const Page = () => {
             </section>
           </CardHeader>
           <CardContent className="bg-[#fbfbfb] w-full">
-            <div className='sticky top-[10rem] md:top-[12rem] bg-[#fbfbfb] py-2'><Searchbar /></div>
+            <div className='sticky top-[14rem] md:top-[15rem] bg-[#fbfbfb] py-2'><Searchbar /></div>
             <div className="pt-2">{!salonLoading && <Services from='artist' />}</div>
             <div className="w-[94%] right-[3%] fixed bottom-5">
               <Cart />

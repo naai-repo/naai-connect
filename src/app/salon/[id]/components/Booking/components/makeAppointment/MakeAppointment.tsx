@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { useBookingService } from '@/hooks/booking.hooks';
-import { cn, currencyConverter, formatDate, formatDateToDDMMYYYY, formatTimeTo12Hour, removeTimeZoneOffsetToDate } from '@/lib/utils';
-import { phoneNumberSelector, userDataSelector } from '@/recoil/auth.atom';
-import { bookingDateSelector, bookingDialogSelector, bookingScheduleSelector, bookingSlotsSelector, cartTotalSelector, makeAppointmentSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom'
-import { getCartServicesSelector, resetCartServicesSelector, salonIdSelector, selectedServiceSelector } from '@/recoil/salon.atom';
-import React, { useEffect, useRef, useState } from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { cn, currencyConverter, dehash, formatDate, formatDateToDDMMYYYY, formatTimeTo12Hour, removeTimeZoneOffsetToDate } from '@/lib/utils';
+import { hashSelector, userDataSelector } from '@/recoil/auth.atom';
+import { bookingDateSelector, bookingDialogSelector, bookingScheduleSelector, bookingSlotsSelector, cartTotalSelector, makeAppointmentSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
+import { getCartServicesSelector, resetCartServicesSelector, salonIdSelector } from '@/recoil/salon.atom';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ConfirmBookingDialog from './ConfirmBooking';
 
 const MakeAppointment = () => {
@@ -28,6 +28,7 @@ const MakeAppointment = () => {
   const resetCart = useSetRecoilState(resetCartServicesSelector);
   const setBookingDate = useSetRecoilState(bookingDateSelector);
   const setBookingSlot = useSetRecoilState(bookingSlotsSelector);
+  const hash = useRecoilValue(hashSelector);
 
   const makeAppointmentHandler = async () => {
     setLoading(true);
@@ -40,8 +41,7 @@ const MakeAppointment = () => {
         phoneNumber: userData?.phoneNumber.toString() as string,
         timeSlots: timeSchedule?.timeSlots as allTimeSlotsType[]
       }
-      console.log(payload);
-      const token = localStorage.getItem("accessToken");
+      const token = dehash(localStorage.getItem('accessToken') || "",hash);
       let res = await bookingService.makeAppointment(payload, token as string);
       setAppointment(res.data);
     } catch (error) {
@@ -56,7 +56,7 @@ const MakeAppointment = () => {
   }
 
   const ConfirmBooking = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = dehash(localStorage.getItem('accessToken')|| "",hash);
     let res = await bookingService.confirmAppointment(appointment as MakeAppointmentResType,token as string);
     if(res.status==200){
       ConfirmBookingRef.current?.openDialog();

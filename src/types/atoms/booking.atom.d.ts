@@ -23,6 +23,6 @@ declare type cartTotalType = {
 declare type artistSelectionType = "single" | "multiple" | undefined;
 
 declare type selectedArtistServiceType = {
-  artist: SingleSalonArtistDataType;
+  artist: string;
   service: SingleSalonServiceDataType;
 };

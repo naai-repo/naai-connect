@@ -76,7 +76,7 @@ const Hero = () => {
       <BookingWrapper ref={bookingRef} />
       <ArtistProfile ref={artistProfileref} />
       <LoginDialog />
-      <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-14 bg-[#fbfbfb] z-30'>
+      <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-[3.3rem] bg-[#fbfbfb] z-30'>
         <div className='flex justify-between w-full'>
           <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name}</h2>
           <StarRating rating={salonData?.data.rating ?? 0} />

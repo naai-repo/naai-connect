@@ -1,16 +1,18 @@
 "use client"
 import React from "react"
-
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { loginDialogSelector, otpSelector, userIdSelector } from "@/recoil/auth.atom"
+import { hashSelector, loginDialogSelector, otpSelector, userIdSelector } from "@/recoil/auth.atom"
 import { Button } from "@/components/ui/button"
 import { useAuthServices } from "@/hooks/auth.hoook"
 import { progressSelector } from "@/recoil/booking.atom"
+import { cookies } from "next/headers"
+import useCookie from "@/hooks/cookie.hook"
+import { hashString } from "@/lib/utils"
 
 export function OTPInputControle() {
   const [value, setValue] = useRecoilState(otpSelector);
@@ -18,6 +20,8 @@ export function OTPInputControle() {
   const userId = useRecoilValue(userIdSelector);
   const setLoginDialog = useSetRecoilState(loginDialogSelector);
   const setProgress = useSetRecoilState(progressSelector);
+  const hash = useRecoilValue(hashSelector);
+
   const handleOTPSubmit = async ()=>{
     let payload = {
       userId:userId as string,
@@ -25,9 +29,9 @@ export function OTPInputControle() {
     }
     let res = await authService.verifyOTP(payload);
     if(res.data?.data){
+      localStorage.setItem("accessToken",hashString(res.data.data.accessToken || "",hash));
       if (typeof window !== "undefined") {
         // Safe to use localStorage
-        localStorage.setItem("accessToken", res.data?.data?.accessToken);
         localStorage.setItem("userId", res.data?.data?.id);
       }
       setLoginDialog(false);

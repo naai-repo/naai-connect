@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn, formatDateToDDMMYYYY, formateDateToString, removeTimeZoneOffsetToDate } from "@/lib/utils"
+import { cn, dehash, formatDateToDDMMYYYY, formateDateToString, removeTimeZoneOffsetToDate } from "@/lib/utils"
 import { availableSlotsSelector, bookingDateSelector, bookingScheduleSelector, bookingSlotsSelector, progressSelector, selectedArtistServiceSelector } from "@/recoil/booking.atom"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { useEffect } from "react"
@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import useCookie from "@/hooks/cookie.hook"
 
 export function DatePicker() {
   const [selectedDate, setSelectedDate] = useRecoilState(bookingDateSelector);
@@ -29,13 +30,20 @@ export function DatePicker() {
   const setBookingSlot = useSetRecoilState(availableSlotsSelector);
   const bookingService = useBookingService();
   const setScehdule = useSetRecoilState(bookingScheduleSelector);
+  
+  const checkDate = (date:Date)=>{
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    return date < yesterday ;
+  }
 
   useEffect(() => {
     const load = async () => {
       try{
         let requests: TimeSlotRequestType[] = selectedServiceArtist.map((serviceArtist) => {
           return {
-            artist: serviceArtist.artist.id,
+            artist: serviceArtist.artist,
             service: serviceArtist.service.id
           }
         })
@@ -45,7 +53,9 @@ export function DatePicker() {
           date: formatDateToDDMMYYYY(removeTimeZoneOffsetToDate(selectedDate)),
           requests: requests ?? []
         }
-        const token = localStorage.getItem("accessToken");
+
+        const token = dehash(localStorage.getItem("accessToken") || "",5)
+        console.log(token);
         let res = await bookingService.getTimeSlots(payload,token as string);
         setScehdule(res.data);
         setBookingSlot(res.data.timeSlotsVisible);
@@ -92,9 +102,7 @@ export function DatePicker() {
             </SelectContent>
           </Select>
           <div className="rounded-md border">
-            <Calendar mode="single" selected={selectedDate} onSelect={(e) => setSelectedDate(e as Date)} disabled={(date) =>
-              date < new Date() 
-            } />
+            <Calendar mode="single" selected={selectedDate} onSelect={(e) => setSelectedDate(e as Date)} disabled={(date) => checkDate(date)} />
           </div>
         </PopoverContent>
       </Popover>

@@ -1,20 +1,18 @@
-import { currencyConverter } from '@/lib/utils';
-import { loginDialogSelector, userIdSelector } from '@/recoil/auth.atom';
+import { currencyConverter, dehash } from '@/lib/utils';
+import { hashSelector, loginDialogSelector, userIdSelector } from '@/recoil/auth.atom';
 import { bookingDialogSelector, bookingSlotsSelector, cartTotalSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
-import { getCartServicesSelector, resetCartServicesSelector, salonIdSelector } from '@/recoil/salon.atom';
+import { artistsSelector, getCartServicesSelector, resetCartServicesSelector, salonIdSelector } from '@/recoil/salon.atom';
 import { ArrowRightFromLine, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button } from '../ui/button';
+import useCookie from '@/hooks/cookie.hook';
 
 // Type definitions
 type ContinueButtonProps = {
-  userId?:string;
   progress: number;
   onProgressChange: () => void;
 };
-
-
 
 const Cart: React.FC = () => {
   const cartServices = useRecoilValue(getCartServicesSelector);
@@ -27,14 +25,26 @@ const Cart: React.FC = () => {
   const userId = useRecoilValue(userIdSelector);
   const salonId = useRecoilValue(salonIdSelector);
   const setOpenLoginDialog = useSetRecoilState(loginDialogSelector);
+  const hash = useRecoilValue(hashSelector);
+  const user = dehash(localStorage.getItem("accessToken") || "",hash);
+  const allArtists = useRecoilValue(artistsSelector)
 
   useEffect(()=>{
     const discountedPrice = selectedServicesArtist.reduce((accum,serviceArtist)=>{
-      const foundService = serviceArtist.artist.services.find((service)=>service.serviceId==serviceArtist.service.id);
-      return accum + (foundService?.cutPrice ?? 0);
+      if(serviceArtist.service.variables.length>0){
+          return accum + (serviceArtist.service.variables.find((variable)=>variable.selected)?.variableCutPrice ?? 0);
+      }else{
+        const selectedArtist = allArtists.find((artist)=>artist.id===serviceArtist.artist)
+        const foundService = selectedArtist?.services.find((service)=>service.serviceId==serviceArtist.service.id);
+        return accum + (foundService?.cutPrice ?? 0);
+      }
     },0)
 
     const price = selectedServicesArtist.reduce((accum,serviceArtist)=>{
+      if (serviceArtist.service.variables.length > 0) {
+        const selectedVariable = serviceArtist.service.variables.find(variable => variable.selected);
+        return accum + (selectedVariable?.variableCutPrice || 0);
+      }
       return accum + (serviceArtist.service.cutPrice ?? 0)
     },0)
     setCartTotal({original:price,discounted:discountedPrice})
@@ -67,8 +77,8 @@ const Cart: React.FC = () => {
           <span className='pl-2'>{currencyConverter(cartTotal.discounted)}</span>
         </div>
       </div>
-      <ContinueButton progress={progress} userId={userId as string} onProgressChange={() =>{
-        if(progress==1 && !userId) {
+      <ContinueButton progress={progress}  onProgressChange={() =>{
+        if(progress==1 && !user) {
           setOpenLoginDialog(true);
         }
         else setProgress(p => p + 1);
@@ -87,24 +97,27 @@ const Cart: React.FC = () => {
   );
 };
 
-const ContinueButton: React.FC<ContinueButtonProps> = ({userId, progress, onProgressChange }) => {
+const ContinueButton: React.FC<ContinueButtonProps> = ({ progress, onProgressChange }) => {
   const [displayText, setDisplayText] = useState("Select Artist");
   const artistSelectionType = useRecoilValue(selctedArtistTypeSelector);
   const selectedArtistService = useRecoilValue(selectedArtistServiceSelector);
   const cartServices = useRecoilValue(getCartServicesSelector);
   const [bookingDialg,setbookingDialog] = useRecoilState(bookingDialogSelector);
   const selectedSlot = useRecoilValue(bookingSlotsSelector)
-
+  const hash = useRecoilValue(hashSelector);
+  const user = dehash(localStorage.getItem("accessToken") || "",hash);
+  
   useEffect(() => {
+    console.log(user);
     if (progress === 0) setDisplayText("Select Artist");
-    else if (progress === 1 && !userId) setDisplayText("Login to Continue");
+    else if (progress === 1 && !user) setDisplayText("Login to Continue");
     else if (progress===1) setDisplayText("Select Time");
     else setDisplayText("Confirm Booking");
   }, [progress]);
 
   const disableContinue = ():boolean =>{
     if(progress==0) return false;
-    else if(progress==1 && !userId) {
+    else if(progress==1 && !user) {
       if(artistSelectionType=="multiple" && selectedArtistService.length==cartServices.length)return false;
       else if(artistSelectionType=="single" && selectedArtistService.length==1)return false;
       return true;
