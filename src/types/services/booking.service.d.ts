@@ -68,6 +68,7 @@ declare type MakeAppointmentResType = {
     paymentStatus: string;
     bookingStatus: string;
     bookingDate: string;
+    bookingMode?:string;
     coupon: {
       couponId: string;
       couponCode: string;

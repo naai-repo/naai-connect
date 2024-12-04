@@ -23,7 +23,14 @@ export function useBookingService() {
 
   const confirmAppointment = async (payload:MakeAppointmentResType,token:string):Promise<ConfirmAppointmentController>=>{
     try {
-      let res = await Booking.confirmAppointment(payload,token);
+      let modifiedPayload:MakeAppointmentResType = {
+        ...payload,
+        booking:{
+          ...payload.booking,
+          bookingMode:"app"
+        }
+      }
+      let res = await Booking.confirmAppointment(modifiedPayload,token);
       return successResponse<typeof res>({ data: res });
     } catch (error:any) {
       throw errorResponse({message: error.toString()});

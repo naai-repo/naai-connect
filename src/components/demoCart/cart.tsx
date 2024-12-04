@@ -22,8 +22,6 @@ const Cart: React.FC = () => {
   const progress = useRecoilValue(progressSelector);
   const [bookingDialg,setbookingDialog] = useRecoilState(bookingDialogSelector);
   const selectedServicesArtist = useRecoilValue(selectedArtistServiceSelector);
-  const userId = useRecoilValue(userIdSelector);
-  const salonId = useRecoilValue(salonIdSelector);
   const setOpenLoginDialog = useSetRecoilState(loginDialogSelector);
   const hash = useRecoilValue(hashSelector);
   const user = dehash(localStorage.getItem("accessToken") || "",hash);

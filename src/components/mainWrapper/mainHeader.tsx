@@ -24,6 +24,7 @@ import { useRecoilValue } from "recoil"
 import logo from '../../../public/logos/logo.svg'
 import { useRouter } from "next/navigation"
 import { salonIdSelector } from "@/recoil/salon.atom"
+import ProfilePopOver from "./ProfilePopOver"
 
 interface MainHeaderProps {
   name: string,
@@ -35,7 +36,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ name, externalHeaderElements })
   const router = useRouter();
 
   return (
-    <header className="sticky top-0 z-30 px-4 flex h-14 items-center gap-4 border-b bg-[#fbfbfb]">
+    <header className="sticky top-0 z-30 px-4 flex h-14 items-center gap-4 border-b bg-[#fbfbfb] justify-between">
       <Card className="">
         <CardContent className="flex items-center px-2 py-2">
           <Image onClick={()=>router.push(`/salon/${salonId}`)} src={logo} alt="naai_logo" width={40}></Image>
@@ -52,6 +53,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ name, externalHeaderElements })
           })
         }
       </div>
+      <ProfilePopOver/>
     </header>
   )
 }

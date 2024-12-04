@@ -36,7 +36,7 @@ const MakeAppointment = () => {
       let payload: MakeAppointmentPayload = {
         key: timeSchedule?.timeSlots[0].key as number,
         salonId,
-        bookingDate: formatDateToDDMMYYYY(removeTimeZoneOffsetToDate(bookingDate)),
+        bookingDate:formatDateToDDMMYYYY(removeTimeZoneOffsetToDate(bookingDate)),
         timeSlot: bookingTimeSlot,
         phoneNumber: userData?.phoneNumber.toString() as string,
         timeSlots: timeSchedule?.timeSlots as allTimeSlotsType[]
@@ -47,7 +47,7 @@ const MakeAppointment = () => {
     } catch (error) {
       console.error("error while making appointment", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
   const getOriginalServicePrice = (serviceId: string) => {
@@ -131,7 +131,6 @@ const MakeAppointment = () => {
           ConfirmBooking();
       }} className='w-full'>Confirm Booking</Button>
       </div>
-
     </div>
   )
 }
