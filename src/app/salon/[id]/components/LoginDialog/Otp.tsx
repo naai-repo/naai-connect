@@ -6,7 +6,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { hashSelector, loginDialogSelector, otpSelector, userIdSelector } from "@/recoil/auth.atom"
+import { hashSelector, loginDialogSelector, loginFromHeaderSelector, loginStepSelector, otpSelector, userIdSelector } from "@/recoil/auth.atom"
 import { Button } from "@/components/ui/button"
 import { useAuthServices } from "@/hooks/auth.hoook"
 import { progressSelector } from "@/recoil/booking.atom"
@@ -18,9 +18,12 @@ export function OTPInputControle() {
   const [value, setValue] = useRecoilState(otpSelector);
   const authService = useAuthServices();
   const userId = useRecoilValue(userIdSelector);
+  const setLoginStep = useSetRecoilState(loginStepSelector);
+  const hash = useRecoilValue(hashSelector);
   const setLoginDialog = useSetRecoilState(loginDialogSelector);
   const setProgress = useSetRecoilState(progressSelector);
-  const hash = useRecoilValue(hashSelector);
+  const isFromHeader = useRecoilValue(loginFromHeaderSelector);
+  const setIsFromHeader = useSetRecoilState(loginFromHeaderSelector);
 
   const handleOTPSubmit = async ()=>{
     let payload = {
@@ -29,13 +32,14 @@ export function OTPInputControle() {
     }
     let res = await authService.verifyOTP(payload);
     if(res.data?.data){
-      localStorage.setItem("accessToken",hashString(res.data.data.accessToken || "",hash));
       if (typeof window !== "undefined") {
-        // Safe to use localStorage
+        localStorage.setItem("accessToken",hashString(res.data.data.accessToken || "",hash));
         localStorage.setItem("userId", res.data?.data?.id);
+        setLoginDialog(false);
+        if(!isFromHeader) setProgress(prev=>prev+1);
+        setIsFromHeader(false);
       }
-      setLoginDialog(false);
-      setProgress(prev=>prev+1);
+      if(res.data.data.newUser) setLoginStep(2);
     }
   }
 

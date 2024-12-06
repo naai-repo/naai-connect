@@ -18,7 +18,15 @@ export function useAuthServices() {
       throw errorResponse({message: error.toString()});
     }
   }
-  const getUserData = async (userId:string):Promise<UserDataController> =>{
+  const updateUserData = async (payload:userDataPayloadType):Promise<UserDataUpdateController> =>{
+    try {
+      let res = await Auth.updateUserData(payload);
+      return successResponse<typeof res>({ data: res });
+    } catch (error:any) {
+      throw errorResponse({message: error.toString()});
+    }
+  }
+  const getUserData = async (userId:string):Promise<UserDataResController> =>{
     try {
       let res = await Auth.getUserData(userId);
       return successResponse<typeof res>({ data: res });
@@ -26,5 +34,5 @@ export function useAuthServices() {
       throw errorResponse({message: error.toString()});
     }
   }
-  return {getOTP,verifyOTP,getUserData}
+  return {getOTP,verifyOTP,updateUserData,getUserData}
 }

@@ -2,7 +2,10 @@ declare type User = {
   loginform: loginFormType;
   loginOTPRes: loginOTPResType;
   userDetails: UserType;
-  openDialog: boolean;
+  openDialog: {
+    val:boolean,
+    header?:boolean
+  };
   userData?: userDataType;
   hash:number
 };

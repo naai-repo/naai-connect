@@ -10,8 +10,6 @@ declare type loginOTPResType = {
 
 declare type loginOtpPayload = {
   phoneNumber: string;
-  name:string,
-  gender:"male"|"female"|"not specified"
 };
 
 declare type verifyUserRes = {
@@ -35,10 +33,32 @@ declare type verifyUserRes = {
 declare type UserDataresType = {
   status: string;
   message: string;
-  data: userDataType
-}
+  data: userDataType;
+};
 
 declare type verifyUserPayload = {
   userId: string;
   otp: string;
+};
+
+declare type userDataPayloadType = {
+  userId: string;
+  data: UserUpdateType;
+};
+
+declare type UserUpdateType = {
+  name:string,
+  gender:"male"|"female"|"not specified"
+}
+
+declare type userUpdateResType = {
+  status: string;
+  message: string;
+  data: {
+    acknowledged: boolean;
+    modifiedCount: number;
+    upsertedId: string | null;
+    upsertedCount: number;
+    matchedCount: number;
+  };
 };

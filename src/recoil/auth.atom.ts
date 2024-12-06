@@ -10,7 +10,10 @@ export const userAtom = atom({
       otp:"",
       step:0
     },
-    openDialog:false,
+    openDialog:{
+      val:false,
+      header:false
+    },
     hash:5
   } as User
 });
@@ -68,12 +71,33 @@ export const loginDialogSelector = selector<boolean>({
   key: 'loginDialog',
   get: ({ get }) => {
     const user = get(userAtom);
-    return user.openDialog ?? false;
+    return user.openDialog.val ?? false;
   },
   set:({set},val)=>{
     set(userAtom,prev=>({
       ...prev,
-      openDialog:val as boolean
+      openDialog:{
+        ...prev.openDialog,
+        val:val as boolean
+      }
+    }))
+  }
+});
+
+//login is from header
+export const loginFromHeaderSelector = selector<boolean>({
+  key: 'loginFromHeader',
+  get: ({ get }) => {
+    const user = get(userAtom);
+    return user.openDialog.header ?? false;
+  },
+  set:({set},val)=>{
+    set(userAtom,prev=>({
+      ...prev,
+      openDialog:{
+        ...prev.openDialog,
+        header:val as boolean
+      }
     }))
   }
 });

@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { useAuthServices } from '@/hooks/auth.hoook';
 import { ArrowLeftFromLine } from 'lucide-react';
 import { OTPInputControle } from './Otp';
+import UserInfo from "./UserInfo";
 
 const GENDERS = ["male", "female", "not specified"]
 
@@ -44,12 +45,7 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
   });
 
   const getOTP = async () => {
-    let payload = {
-      phoneNumber,
-      name: userName as string,
-      gender: userGender as "male" | "female" | "not specified"
-    }
-    let res = await authService.getOTP(payload);
+    let res = await authService.getOTP({phoneNumber});
     console.log(res.data?.data);
     if (res.status == 200) {
       setOtpRes(res?.data as loginOTPResType);
@@ -67,7 +63,7 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
       <DialogContent className="w-fit flex flex-col pb-10 rounded-lg pt-2">
         <DialogHeader className="pb-5">
           <span className='flex justify-end'>{loginStep == 1 && <Button onClick={() => setLoginStep(0)} className='w-fit'><ArrowLeftFromLine /></Button>}</span>
-          <h2 className='text-center text-lg text-nowrap text-black px-5'>Login or Create Account</h2>
+          <h2 className='text-center text-lg text-nowrap text-black px-5'>{loginStep<2?"Login or Create Account":"Enter User Details"}</h2>
         </DialogHeader>
         <DialogDescription>
           <div className="flex flex-col gap-2 justify-start px-5">
@@ -86,19 +82,8 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
                   }
                 }}
               />
-              <Input placeholder='Enter Name' type='text' value={userName} onChange={(e) => setuserName(e.target.value)} />
-              <Select onValueChange={(val)=>handleGender(val)}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Gender" />
-                </SelectTrigger>
-                <SelectContent className='capitalize'>
-                  {GENDERS.map((gender)=>(
-                    <SelectItem key={gender} value={gender}>{gender}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button disabled={phoneNumber.length < 10 || userName.toString().length==0 || userGender.toString().length==0} onClick={() => { getOTP() }}>Get OTP</Button></div>
-              : <OTPInputControle />
+              <Button disabled={phoneNumber.length < 10 } onClick={() => { getOTP() }}>Get OTP</Button></div>
+              : loginStep==1?<OTPInputControle />:<UserInfo/>
             }
           </div>
         </DialogDescription>
