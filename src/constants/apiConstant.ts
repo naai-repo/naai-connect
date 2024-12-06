@@ -9,6 +9,7 @@ export default class API_CONSTANTS {
   static verifyUserOtp = this.BASE_URL+ "/customer/otp/verify";
   static makeAppointment = this.BASE_URL + "/appointments/book";
   static confirmAppointment = this.BASE_URL + "/appointments/confirm";
-  static getUserData = this.BASE_URL + "/customer/user/<USERID>";
+  static getUserById = this.BASE_URL + "/customer/user/<USER_ID>"
+  static updateUser = this.BASE_URL + "/customer/user/update";
   static getArtistById = this.BASE_URL + "/partner/artist/single/<ARTIST_ID>";
 }

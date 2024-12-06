@@ -3,7 +3,7 @@ import Cart from "@/components/demoCart/cart";
 import MainWrapper from "@/components/mainWrapper/mainWrapper";
 import { useSalonService } from "@/hooks/salon.hooks";
 import { useToast } from "@/hooks/use-toast";
-import { userDataSelector, userIdSelector } from "@/recoil/auth.atom";
+import { loginDialogSelector, loginStepSelector, userDataSelector, userIdSelector } from "@/recoil/auth.atom";
 import { progressSelector } from "@/recoil/booking.atom";
 import { categorySelector, getCartServicesSelector, salonIdSelector, salonLoading, serviceSelector, singleSalonDataSelector } from "@/recoil/salon.atom";
 import { useParams } from "next/navigation";
@@ -25,7 +25,9 @@ const DynamicPage = () => {
   const setProgress = useSetRecoilState(progressSelector);
   const setuserId = useSetRecoilState(userIdSelector);
   const setCategories = useSetRecoilState(categorySelector);
-  const setUserData = useSetRecoilState(userDataSelector)
+  const setUserData = useSetRecoilState(userDataSelector);
+  const setLoginDialog = useSetRecoilState(loginDialogSelector);
+  const setLoginStep = useSetRecoilState(loginStepSelector);
   const authService = useAuthServices();
   const {toast} = useToast();
 
@@ -39,6 +41,10 @@ const DynamicPage = () => {
 
   const getUserData = async (userId:string)=>{
     const res = await authService.getUserData(userId);
+    if(!res.data?.data.name){
+      setLoginStep(2);
+      setLoginDialog(true);
+    }
     setUserData(res?.data?.data);
   }
 
@@ -82,7 +88,6 @@ const DynamicPage = () => {
           <Cart/>
         </div>
         <Hero/>
-        <Cart/>
       </div>
     }
     </MainWrapper>

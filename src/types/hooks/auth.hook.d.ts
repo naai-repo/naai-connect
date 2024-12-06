@@ -8,6 +8,10 @@ declare type authVerifyController = responseWrapperType & {
   data?:verifyUserRes
 }
 
-declare type UserDataController = responseWrapperType & {
+declare type UserDataUpdateController = responseWrapperType & {
+  data?:userUpdateResType
+}
+
+declare type UserDataResController = responseWrapperType & {
   data?:UserDataresType
 }
