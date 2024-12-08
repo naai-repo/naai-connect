@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { availableSlotsSelector, bookingDateSelector, bookingSlotsSelector } from '@/recoil/booking.atom'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { availableSlotsSelector, bookingDateSelector, bookingOverlayLoadingSelector, bookingSlotsSelector } from '@/recoil/booking.atom'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -13,7 +13,8 @@ type DividedSlots = {
 const TimePicker = () => {
   const availableSlots = useRecoilValue(availableSlotsSelector);
   const [bookingSlot, setBookingSlots] = useRecoilState(bookingSlotsSelector);
-  const bookigDate = useRecoilValue(bookingDateSelector)
+  const bookigDate = useRecoilValue(bookingDateSelector);
+
   const [dividedSlots, setDividedSlots] = useState<DividedSlots>({
     morning: [],
     afternoon: [],

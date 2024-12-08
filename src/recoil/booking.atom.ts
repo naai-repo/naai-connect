@@ -10,7 +10,9 @@ export const bookingAtom = atom({
     },
     availableSlots:[[""]],
     selectedDate:new Date(),
-    selectedArtistService:[] as selectedArtistServiceType[]
+    selectedArtistService:[] as selectedArtistServiceType[],
+    isOverLayLoading:false,
+    bookingContineLoading:false,
   } as bookingAtomTypr
 })
 
@@ -164,6 +166,8 @@ export const cartTotalSelector = selector<cartTotalType>({
   }
 })
 
+
+
 // artist selection type
 export const selctedArtistTypeSelector = selector<artistSelectionType>({
   key:"selctedArtistType",
@@ -175,6 +179,36 @@ export const selctedArtistTypeSelector = selector<artistSelectionType>({
     set(bookingAtom,(prev)=>({
       ...prev,
       artistSelectionType:val as artistSelectionType
+    }))
+  }
+})
+
+// booking overlay loading selector
+export const bookingOverlayLoadingSelector = selector<boolean>({
+  key:"bookingOverlayLoadingSelector",
+  get:({get})=>{
+    const data = get(bookingAtom);
+    return data.isOverLayLoading ?? false;
+  },
+  set:({set},val)=>{
+    set(bookingAtom,(prev)=>({
+      ...prev,
+      isOverLayLoading:val as boolean
+    }))
+  }
+})
+
+// boooking contine loading selector
+export const bookingContinueLoadingSelector = selector<boolean>({
+  key:"bookingContinueLoadingSelector",
+  get:({get})=>{
+    const data = get(bookingAtom);
+    return data.bookingContineLoading ?? false;
+  },
+  set:({set},val)=>{
+    set(bookingAtom,(prev)=>({
+      ...prev,
+      bookingContineLoading:val as boolean
     }))
   }
 })

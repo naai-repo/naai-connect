@@ -1,21 +1,23 @@
 import { atom, selector, selectorFamily} from 'recoil';
 
+const defaultState = {
+  loginform:{
+    phoneNumber:"",
+    name:"",
+    gender:"",
+    otp:"",
+    step:0
+  },
+  openDialog:{
+    val:false,
+    header:false
+  },
+  hash:5
+}
+
 export const userAtom = atom({
   key: 'user',
-  default: {
-    loginform:{
-      phoneNumber:"",
-      name:"",
-      gender:"",
-      otp:"",
-      step:0
-    },
-    openDialog:{
-      val:false,
-      header:false
-    },
-    hash:5
-  } as User
+  default: defaultState as User
 });
 
 // userid getter
@@ -76,6 +78,7 @@ export const loginDialogSelector = selector<boolean>({
   set:({set},val)=>{
     set(userAtom,prev=>({
       ...prev,
+      loginform:defaultState.loginform as loginFormType,
       openDialog:{
         ...prev.openDialog,
         val:val as boolean

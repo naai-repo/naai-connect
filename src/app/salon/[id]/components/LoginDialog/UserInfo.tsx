@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { loginDialogSelector, loginFromHeaderSelector, loginStepSelector, otpResSelector, phoneNumberSelector, userIdSelector, userInputFieldSelector } from '@/recoil/auth.atom';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ import { useAuthServices } from '@/hooks/auth.hoook';
 import { ArrowLeftFromLine } from 'lucide-react';
 import { OTPInputControle } from './Otp';
 import { progressSelector } from "@/recoil/booking.atom";
+import { confirmDialogSelector, confirmTextSelector } from "@/recoil/drawer.atom";
 
 const GENDERS = ["male", "female", "not specified"]
 
@@ -33,8 +34,8 @@ const UserInfo = () => {
   const isFromHeader = useRecoilValue(loginFromHeaderSelector);
   const setIsFromHeader = useSetRecoilState(loginFromHeaderSelector);
   const authService = useAuthServices();
-
-  
+  const setConfirmDialog = useSetRecoilState(confirmDialogSelector);
+  const setConfirmText = useSetRecoilState(confirmTextSelector);
 
   const updateUser = async () => {
     let payload = {
@@ -48,6 +49,8 @@ const UserInfo = () => {
     console.log(res.data?.data);
     if (res.status == 200) {
       setLoginDialog(false);
+      setConfirmDialog(true);
+      setConfirmText("Login Successfull");
       if(!isFromHeader) setProgress(prev=>prev+1);
       setIsFromHeader(false);
     }

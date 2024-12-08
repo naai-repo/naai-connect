@@ -1,6 +1,4 @@
 "use client"
-import { addDays, format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -8,12 +6,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn, dehash, formatDateToDDMMYYYY, formateDateToString, removeTimeZoneOffsetToDate } from "@/lib/utils"
-import { availableSlotsSelector, bookingDateSelector, bookingScheduleSelector, bookingSlotsSelector, progressSelector, selectedArtistServiceSelector } from "@/recoil/booking.atom"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { useEffect } from "react"
-import { useBookingService } from "@/hooks/booking.hooks"
-import { salonIdSelector } from "@/recoil/salon.atom"
 import {
   Select,
   SelectContent,
@@ -21,7 +13,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import useCookie from "@/hooks/cookie.hook"
+import { useBookingService } from "@/hooks/booking.hooks"
+import { cn, dehash, formatDateToDDMMYYYY, removeTimeZoneOffsetToDate } from "@/lib/utils"
+import { availableSlotsSelector, bookingDateSelector, bookingOverlayLoadingSelector, bookingScheduleSelector, selectedArtistServiceSelector } from "@/recoil/booking.atom"
+import { salonIdSelector } from "@/recoil/salon.atom"
+import { addDays, format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { useEffect } from "react"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 
 export function DatePicker() {
   const [selectedDate, setSelectedDate] = useRecoilState(bookingDateSelector);
@@ -30,6 +29,7 @@ export function DatePicker() {
   const setBookingSlot = useSetRecoilState(availableSlotsSelector);
   const bookingService = useBookingService();
   const setScehdule = useSetRecoilState(bookingScheduleSelector);
+  const setisOverLayLoading = useSetRecoilState(bookingOverlayLoadingSelector);
   
   const checkDate = (date:Date)=>{
     const today = new Date();
@@ -41,10 +41,14 @@ export function DatePicker() {
   useEffect(() => {
     const load = async () => {
       try{
+        setisOverLayLoading(true);
         let requests: TimeSlotRequestType[] = selectedServiceArtist.map((serviceArtist) => {
+          let variable = serviceArtist.service.variables
+          let selectedVariable = variable.length>0?variable.find((v)=>v.selected):undefined;
           return {
             artist: serviceArtist.artist,
-            service: serviceArtist.service.id
+            service: serviceArtist.service.id,
+            variable:selectedVariable
           }
         })
   
@@ -55,12 +59,13 @@ export function DatePicker() {
         }
 
         const token = dehash(localStorage.getItem("accessToken") || "",5)
-        console.log(token);
         let res = await bookingService.getTimeSlots(payload,token as string);
         setScehdule(res.data);
         setBookingSlot(res.data.timeSlotsVisible);
       }catch{
         setBookingSlot([[""]]);
+      }finally{
+        setisOverLayLoading(false);
       }
     }
     load();

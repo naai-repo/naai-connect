@@ -3,11 +3,12 @@ import { Spinner } from '@/components/ui/spinner';
 import { useBookingService } from '@/hooks/booking.hooks';
 import { cn, currencyConverter, dehash, formatDate, formatDateToDDMMYYYY, formatTimeTo12Hour, removeTimeZoneOffsetToDate } from '@/lib/utils';
 import { hashSelector, userDataSelector } from '@/recoil/auth.atom';
-import { bookingDateSelector, bookingDialogSelector, bookingScheduleSelector, bookingSlotsSelector, cartTotalSelector, makeAppointmentSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
+import { bookingDateSelector, bookingDialogSelector, bookingOverlayLoadingSelector, bookingScheduleSelector, bookingSlotsSelector, cartTotalSelector, makeAppointmentSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
 import { getCartServicesSelector, resetCartServicesSelector, salonIdSelector } from '@/recoil/salon.atom';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import ConfirmBookingDialog from './ConfirmBooking';
+import { confirmDialogSelector } from '@/recoil/drawer.atom';
+import ConfirmBookingDialog from '@/components/confirmDialog/ConfirmBooking';
 
 const MakeAppointment = () => {
   const progress = useRecoilValue(progressSelector);
@@ -29,10 +30,13 @@ const MakeAppointment = () => {
   const setBookingDate = useSetRecoilState(bookingDateSelector);
   const setBookingSlot = useSetRecoilState(bookingSlotsSelector);
   const hash = useRecoilValue(hashSelector);
+  const setConfirmDialog = useSetRecoilState(confirmDialogSelector);
+  const setisOverLayLoading = useSetRecoilState(bookingOverlayLoadingSelector);
 
   const makeAppointmentHandler = async () => {
     setLoading(true);
     try {
+      setisOverLayLoading(true);
       let payload: MakeAppointmentPayload = {
         key: timeSchedule?.timeSlots[0].key as number,
         salonId,
@@ -47,6 +51,7 @@ const MakeAppointment = () => {
     } catch (error) {
       console.error("error while making appointment", error);
     } finally {
+      setisOverLayLoading(false);
       setLoading(false);
     }
   }
@@ -59,7 +64,7 @@ const MakeAppointment = () => {
     const token = dehash(localStorage.getItem('accessToken')|| "",hash);
     let res = await bookingService.confirmAppointment(appointment as MakeAppointmentResType,token as string);
     if(res.status==200){
-      ConfirmBookingRef.current?.openDialog();
+      setConfirmDialog(true);
       setSelctedArtistService([]);
       setBookingDate(new Date());
       setBookingSlot([]);
@@ -78,7 +83,6 @@ const MakeAppointment = () => {
   return (
     <div className='w-full p-3'>
       <ConfirmBookingDialog ref={ConfirmBookingRef}/>
-      {loading ? <Spinner /> :
         <div className='flex flex-col gap-5'>
           <div className='flex p-2 shadow border rounded-md text-base font-semibold capitalize text-black'>
             <div className='flex flex-col items-center border-r-2 flex-grow '>
@@ -102,7 +106,7 @@ const MakeAppointment = () => {
                   <div className={cn('w-full flex justify-between items-start', ind != appointment.booking.artistServiceMap.length - 1 && "border-b")}>
                     <div>
                       <h4 className='text-base'>{booking.serviceName}</h4>
-                      <p>{booking.artistName}</p>
+                      <p>{booking.artistName ? booking.artistName:"Random Artist"}</p>
                     </div>
                     <p>+ {currencyConverter(getOriginalServicePrice(booking.serviceId))}</p>
                   </div>
@@ -125,7 +129,6 @@ const MakeAppointment = () => {
             {currencyConverter(totalBookingCost.discounted)}
           </div>
         </div>
-      }
       <div className='p-1 bg-background py-3 fixed bottom-0 w-[90%] '>
         <Button onClick={()=>{
           ConfirmBooking();
