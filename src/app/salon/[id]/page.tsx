@@ -84,7 +84,7 @@ const DynamicPage = () => {
     }}>
       {loading?<Skeleton/>:
       <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10">
-        <div className="w-[94%] right-[3%] fixed bottom-5">
+        <div className="w-[94%] right-[3%] fixed bottom-5 z-50">
           <Cart/>
         </div>
         <Hero/>

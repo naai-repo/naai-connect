@@ -6,7 +6,6 @@ import { ArrowRightFromLine, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button } from '../ui/button';
-import useCookie from '@/hooks/cookie.hook';
 
 // Type definitions
 type ContinueButtonProps = {
@@ -14,7 +13,11 @@ type ContinueButtonProps = {
   onProgressChange: () => void;
 };
 
-const Cart: React.FC = () => {
+type CartPropsType = {
+  fromBooking?:boolean
+}
+
+const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
   const cartServices = useRecoilValue(getCartServicesSelector);
   const clearCart = useSetRecoilState(resetCartServicesSelector);
   const setProgress = useSetRecoilState(progressSelector);
@@ -25,49 +28,50 @@ const Cart: React.FC = () => {
   const setOpenLoginDialog = useSetRecoilState(loginDialogSelector);
   const hash = useRecoilValue(hashSelector);
   const user = dehash(localStorage.getItem("accessToken") || "",hash);
-  const allArtists = useRecoilValue(artistsSelector)
-
-  useEffect(()=>{
-    const discountedPrice = selectedServicesArtist.reduce((accum,serviceArtist)=>{
-      if(serviceArtist.service.variables.length>0){
-          return accum + (serviceArtist.service.variables.find((variable)=>variable.selected)?.variableCutPrice ?? 0);
-      }else{
-        const selectedArtist = allArtists.find((artist)=>artist.id===serviceArtist.artist)
-        const foundService = selectedArtist?.services.find((service)=>service.serviceId==serviceArtist.service.id);
-        return accum + (foundService?.cutPrice ?? 0);
-      }
-    },0)
-
-    const price = selectedServicesArtist.reduce((accum,serviceArtist)=>{
-      if (serviceArtist.service.variables.length > 0) {
-        const selectedVariable = serviceArtist.service.variables.find(variable => variable.selected);
-        return accum + (selectedVariable?.variableCutPrice || 0);
-      }
-      return accum + (serviceArtist.service.cutPrice ?? 0)
-    },0)
-    setCartTotal({original:price,discounted:discountedPrice})
-  },[selectedServicesArtist]);
-
+  const allArtists = useRecoilValue(artistsSelector);
+  
+  
   useEffect(() => {
-    if (cartServices.length > 0) {
-      const total = cartServices.reduce((acc, service) => {
-        if (service.variables.length > 0) {
-          const selectedVariable = service.variables.find(variable => variable.selected);
-          return acc + (selectedVariable?.variableCutPrice || 0);
+    if (selectedServicesArtist.length > 0) {
+      const discountedPrice = selectedServicesArtist.reduce((accum, serviceArtist) => {
+        if (serviceArtist.service.variables.length > 0) {
+          return accum + (serviceArtist.service.variables.find((variable) => variable.selected)?.variableCutPrice ?? 0);
+        } else {
+          const selectedArtist = allArtists.find((artist) => artist.id === serviceArtist.artist)
+          const foundService = selectedArtist?.services.find((service) => service.serviceId == serviceArtist.service.id);
+          return accum + (foundService?.cutPrice ?? 0);
         }
-        return acc + service.cutPrice;
-      }, 0);
+      }, 0)
 
-      setCartTotal({ original: total, discounted: total } as cartTotalType);
+      const price = selectedServicesArtist.reduce((accum, serviceArtist) => {
+        if (serviceArtist.service.variables.length > 0) {
+          const selectedVariable = serviceArtist.service.variables.find(variable => variable.selected);
+          return accum + (selectedVariable?.variableCutPrice || 0);
+        }
+        return accum + (serviceArtist.service.cutPrice ?? 0)
+      }, 0)
+      setCartTotal({ original: price, discounted: discountedPrice })
+    }else{
+      if (cartServices.length > 0) {
+        const total = cartServices.reduce((acc, service) => {
+          if (service.variables.length > 0) {
+            const selectedVariable = service.variables.find(variable => variable.selected);
+            return acc + (selectedVariable?.variableCutPrice || 0);
+          }
+          return acc + service.cutPrice;
+        }, 0);
+        
+        setCartTotal({ original: total, discounted: total } as cartTotalType);
+      }
     }
-  }, [cartServices]);
-
+  }, [selectedServicesArtist]);
+  
   if (!cartServices.length) {
     return null;
   }
 
   return (
-    <div className='flex justify-between items-center w-full justify-self-center relative p-5 shadow-md z-50 bg-[#fbfbfb] border border-gray-600 rounded-lg'>
+    <div className='flex justify-between items-center w-full justify-self-center relative p-5 shadow-md  bg-[#fbfbfb] border border-gray-600 rounded-lg'>
       <div className='flex flex-col text-base text-start font-semibold'>
         <span className='text-base text-gray-600'>Total</span>
         <div>
@@ -81,7 +85,7 @@ const Cart: React.FC = () => {
         }
         else setProgress(p => p + 1);
         }} />
-      <Button
+      {!fromBooking && <Button
         className='absolute -top-4 -right-3 rounded-full p-2 '
         variant="outline"
         onClick={() => {
@@ -91,6 +95,7 @@ const Cart: React.FC = () => {
       >
         <X size={18} />
       </Button>
+      }
     </div>
   );
 };
@@ -106,7 +111,6 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({ progress, onProgressCha
   const user = dehash(localStorage.getItem("accessToken") || "",hash);
   
   useEffect(() => {
-    console.log(user);
     if (progress === 0) setDisplayText("Select Artist");
     else if (progress === 1 && !user) setDisplayText("Login to Continue");
     else if (progress===1) setDisplayText("Select Time");

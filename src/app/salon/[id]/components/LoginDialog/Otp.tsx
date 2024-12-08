@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useRef } from "react"
 import {
   InputOTP,
   InputOTPGroup,
@@ -13,6 +13,7 @@ import { progressSelector } from "@/recoil/booking.atom"
 import { cookies } from "next/headers"
 import useCookie from "@/hooks/cookie.hook"
 import { hashString } from "@/lib/utils"
+import { confirmDialogSelector, confirmTextSelector } from "@/recoil/drawer.atom"
 
 export function OTPInputControle() {
   const [value, setValue] = useRecoilState(otpSelector);
@@ -24,6 +25,10 @@ export function OTPInputControle() {
   const setProgress = useSetRecoilState(progressSelector);
   const isFromHeader = useRecoilValue(loginFromHeaderSelector);
   const setIsFromHeader = useSetRecoilState(loginFromHeaderSelector);
+  const ConfirmRef = useRef<ConfirmbookingRefType>(null);
+  const setConfirmDialog = useSetRecoilState(confirmDialogSelector);
+  const setConfirmText = useSetRecoilState(confirmTextSelector);
+  
 
   const handleOTPSubmit = async ()=>{
     let payload = {
@@ -32,14 +37,16 @@ export function OTPInputControle() {
     }
     let res = await authService.verifyOTP(payload);
     if(res.data?.data){
-      if (typeof window !== "undefined") {
-        localStorage.setItem("accessToken",hashString(res.data.data.accessToken || "",hash));
-        localStorage.setItem("userId", res.data?.data?.id);
+      localStorage.setItem("accessToken",hashString(res.data.data.accessToken || "",hash));
+      localStorage.setItem("userId", res.data?.data?.id);
+      if(res.data.data.newUser) setLoginStep(2);
+      else{
         setLoginDialog(false);
+        setConfirmDialog(true);
+        setConfirmText("Login Successfull");
         if(!isFromHeader) setProgress(prev=>prev+1);
         setIsFromHeader(false);
       }
-      if(res.data.data.newUser) setLoginStep(2);
     }
   }
 

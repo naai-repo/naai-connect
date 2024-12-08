@@ -14,7 +14,7 @@ const Wrapper = () => {
   return (
     <div className='w-full bg-[#fbfbfb]'>
       <Tabs defaultValue="services" className="w-full">
-        <TabsList className='w-full border-b-2 border-black rounded-none bg-[#fbfbfb] sticky top-[15rem] sm:top-[13.8rem] z-30 flex justify-start py-7'>
+        <TabsList className='w-full border-b-2 border-black rounded-none bg-[#fbfbfb] sticky top-[15rem] sm:top-[13.8rem] z-20 flex justify-start py-7'>
           <TabsTrigger className='text-base border-0 bg-transparent' value="services">Services</TabsTrigger>
           <TabsTrigger className='text-base border-0 bg-transparent' value="artists">Artists</TabsTrigger>
           <TabsTrigger className='text-base border-0 bg-transparent' value="reviews">Reviews</TabsTrigger>

@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, memo, useImperativeHandle } from 'react';
 
 import {
   Dialog,
@@ -10,22 +10,23 @@ import {
 
 import Cart from '@/components/demoCart/cart';
 import { Button } from '@/components/ui/button';
-import { bookingDateSelector, bookingDialogSelector, bookingSlotsSelector, progressSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
-import { resetCartServicesSelector } from '@/recoil/salon.atom';
+import { bookingDateSelector, bookingDialogSelector, bookingOverlayLoadingSelector, bookingSlotsSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
 import { X } from 'lucide-react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ArtistSelect from './components/ArtistSelect';
 import MakeAppointment from './components/makeAppointment/MakeAppointment';
 import Progress from './components/Progress';
 import SlotWrapper from './components/timeSlot/SlotWrapper';
+import { Spinner } from '@/components/ui/spinner';
 
 const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   const [open, setOpen] = useRecoilState(bookingDialogSelector);
   const [progress, setProgress] = useRecoilState(progressSelector);
   const setSelctedArtistService = useSetRecoilState(selectedArtistServiceSelector);
-  const resetCart = useSetRecoilState(resetCartServicesSelector);
   const setBookingDate = useSetRecoilState(bookingDateSelector);
   const setBookingSlot = useSetRecoilState(bookingSlotsSelector);
+  const isOverlayLoading = useRecoilValue(bookingOverlayLoadingSelector);
+  const setArtistSelectionType = useSetRecoilState(selctedArtistTypeSelector)
 
   const openSheet = () => {
     setOpen(true);
@@ -33,8 +34,8 @@ const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   const closeSheet = () => {
     setSelctedArtistService([]);
     setBookingDate(new Date());
+    setArtistSelectionType(undefined);
     setBookingSlot([]);
-    resetCart();
     setProgress(0);
     setOpen(false);
   }
@@ -48,28 +49,36 @@ const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
       <DialogContent className="h-[100%] max-w-[100%] sm:h-[90%] sm:max-w-[60%] flex flex-col pt-0 px-2 sm:p-4 ">
         <DialogHeader className="flex items-center bg-white py-2">
           <div className='flex justify-end w-full '>
-          <Button variant="outline" className="py-4 px-2" size="sm" onClick={(e) => {
-            closeSheet();
-          }}>
-            <X size={18} ></X>
-          </Button>
+            <Button variant="outline" className="py-4 px-2" size="sm" onClick={(e) => {
+              closeSheet();
+            }}>
+              <X size={18} ></X>
+            </Button>
           </div>
-          
+
           <div className='w-full '>
             <Progress />
-        </div>
+          </div>
         </DialogHeader>
         <DialogDescription className='overflow-y-auto scrollbar-hide mb-24'>
-        <div>
-          {progress == 1 ? <ArtistSelect /> : progress == 2?<SlotWrapper/>:progress==3?<MakeAppointment/>:progress==4}
-        </div>
+          {isOverlayLoading ?
+            <div className="absolute flex items-center justify-center backdrop-blur-[0.5px] h-full w-full">
+              <div className="p-1 rounded-full bg-primary flex flex-col items-center justify-center translate-x-[-50%] translate-y-[-50%]">
+                <Spinner size={"medium"} className='text-white'></Spinner>
+              </div>
+            </div>
+            : null}
+          <div>
+            {progress == 1 ? <ArtistSelect /> : progress == 2 ? <SlotWrapper /> : progress == 3 ? <MakeAppointment /> : progress == 4}
+          </div>
         </DialogDescription>
-          <DialogFooter className='fixed bottom-5 w-[94%] right-[3%]'>
-          {progress<3 && <Cart/>}
-      </DialogFooter>
+        <DialogFooter className='fixed bottom-5 w-[94%] right-[3%]'>
+          {progress < 3 && <Cart fromBooking/>}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 })
 
-export default BookingWrapper
+export default BookingWrapper;
+

@@ -11,7 +11,10 @@ declare type bookingAtomTypr = {
   selectedTime?:string[];
   artistNotAvailable:boolean;
   makeAppointment?:MakeAppointmentResType;
-  appointmentArtists?:SingleSalonArtistDataType[]
+  appointmentArtists?:SingleSalonArtistDataType[];
+  isOverLayLoading:boolean;
+  bookingContineLoading:boolean;
+  resetCartPrice:boolean
 };
 declare type cartTotalType = {
   original: number;

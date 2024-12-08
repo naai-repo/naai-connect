@@ -4,34 +4,27 @@ import {
   DialogDescription,
   DialogHeader
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { loginDialogSelector, loginStepSelector, otpResSelector, phoneNumberSelector, userIdSelector, userInputFieldSelector } from '@/recoil/auth.atom';
-import { forwardRef, useImperativeHandle } from 'react';
+import { loginDialogSelector, loginStepSelector, otpResSelector, phoneNumberSelector, userIdSelector } from '@/recoil/auth.atom';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 
+import ConfirmBookingDialog from "@/components/confirmDialog/ConfirmBooking";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthServices } from '@/hooks/auth.hoook';
-import { ArrowLeftFromLine } from 'lucide-react';
+import { ArrowLeftFromLine, X } from 'lucide-react';
 import { OTPInputControle } from './Otp';
 import UserInfo from "./UserInfo";
 
 const GENDERS = ["male", "female", "not specified"]
 
-const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
+const LoginDialog = forwardRef<LoginDialogRefType>(({}, ref) => {
   const [open, setOpen] = useRecoilState(loginDialogSelector);
   const [phoneNumber, setPhoneNumber] = useRecoilState(phoneNumberSelector);
   const [loginStep, setLoginStep] = useRecoilState(loginStepSelector);
   const [otpRes, setOtpRes] = useRecoilState(otpResSelector);
   const [userId, setUserId] = useRecoilState(userIdSelector);
-  const [userName, setuserName] = useRecoilState(userInputFieldSelector("name")) ;
-  const [userGender, setUserGender] = useRecoilState(userInputFieldSelector("gender"));
+  const ConfirmBookingRef = useRef<ConfirmbookingRefType>(null);
   const authService = useAuthServices();
 
   const openSheet = () => {
@@ -46,7 +39,6 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
 
   const getOTP = async () => {
     let res = await authService.getOTP({phoneNumber});
-    console.log(res.data?.data);
     if (res.status == 200) {
       setOtpRes(res?.data as loginOTPResType);
       setUserId(res.data?.data?.userId as string);
@@ -54,14 +46,13 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
     }
   }
 
-  const handleGender = (val:string)=>{
-    setUserGender(val);
-  }
-
   return (
+    <>
+    <ConfirmBookingDialog ref={ConfirmBookingRef} />
     <Dialog open={open}>
-      <DialogContent className="w-fit flex flex-col pb-10 rounded-lg pt-2">
-        <DialogHeader className="pb-5">
+      <DialogContent className="w-fit flex flex-col pb-12 rounded-lg pt-1 px-2">
+        {loginStep==0 && <div className="flex justify-end"><Button className="w-fit p-2" variant={"outline"} onClick={()=>closeSheet()}><X /> </Button></div>}
+        <DialogHeader className="pb-5 ">
           <span className='flex justify-end'>{loginStep == 1 && <Button onClick={() => setLoginStep(0)} className='w-fit'><ArrowLeftFromLine /></Button>}</span>
           <h2 className='text-center text-lg text-nowrap text-black px-5'>{loginStep<2?"Login or Create Account":"Enter User Details"}</h2>
         </DialogHeader>
@@ -89,6 +80,7 @@ const LoginDialog = forwardRef<LoginDialogRefType>(({ }, ref) => {
         </DialogDescription>
       </DialogContent>
     </Dialog>
+    </>
   )
 })
 
