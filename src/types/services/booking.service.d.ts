@@ -22,7 +22,7 @@ declare type orderType = {
     description: string;
     targetGender: string;
     avgTime: number;
-    variables: ServiceVariableType[];
+    variables: ServiceVariableType;
     basePrice: number;
     cutPrice: number;
     productsUsed: [];

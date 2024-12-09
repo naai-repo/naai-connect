@@ -5,7 +5,19 @@ export function useBookingService() {
 
   const getTimeSlots = async (payload:TimeSlotPayload,token:string):Promise<TimeSlotController>=>{
     try {
-      let res = await Booking.getTimeSlots(payload,token);
+      let updatedPayLoad = {
+        ...payload,
+        requests:payload.requests.map((req)=>{
+          return {
+            ...req,
+            variable:{
+              ...req.variable,
+              _id:req.variable?._id
+            } as ServiceVariableType
+          }
+        })
+      }
+      let res = await Booking.getTimeSlots(updatedPayLoad,token);
       return successResponse<typeof res>({ data: res });
     } catch (error: any) {
       throw errorResponse({message: error.toString()});
@@ -14,7 +26,21 @@ export function useBookingService() {
 
   const makeAppointment = async (payload:MakeAppointmentPayload,token:string):Promise<MakeAppointmentController>=>{
     try {
-      let res = await Booking.makeAppointment(payload,token);
+      let updatedPayLoad:MakeAppointmentPayload = {
+        ...payload,
+        timeSlots:payload.timeSlots.map((slot)=>{
+          return {
+            ...slot,
+            order:slot.order.map((ord)=>{
+              return {
+                ...ord,
+                
+              }
+            })
+          }
+        })
+      };
+      let res = await Booking.makeAppointment(updatedPayLoad,token);
       return successResponse<typeof res>({ data: res });
     } catch (error:any) {
       throw errorResponse({message: error.toString()});
@@ -30,6 +56,7 @@ export function useBookingService() {
           bookingMode:"app"
         }
       }
+      modifiedPayload = JSON.parse(JSON.stringify(modifiedPayload));
       let res = await Booking.confirmAppointment(modifiedPayload,token);
       return successResponse<typeof res>({ data: res });
     } catch (error:any) {
