@@ -12,7 +12,7 @@ import { InstagramLogoIcon } from '@radix-ui/react-icons';
 import Services from '@/components/serviceComponents/Services';
 import Cart from '@/components/demoCart/cart';
 import Searchbar from '@/app/salon/[id]/components/Filter/FilterCategories';
-import BookingWrapper from '@/app/salon/[id]/components/Booking/BookingWrapper';
+import BookingWrapper from '@/components/Booking/BookingWrapper';
 import MainWrapper from '@/components/mainWrapper/mainWrapper';
 import { useArtistService } from '@/hooks/artist.hook';
 import { ArtistByIdSelector } from '@/recoil/artist.atom';
