@@ -21,6 +21,7 @@ export default class Booking {
   static makeAppointment = (payload:MakeAppointmentPayload,authToken:string)=>{
     return new Promise<MakeAppointmentResType>(async (resolve, reject) => {
       try {
+        console.log(payload);
         let res = await axios.post(API_CONSTANTS.makeAppointment, payload,{
             headers: {
               Authorization: `Bearer ${authToken}`,

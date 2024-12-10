@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { availableSlotsSelector, bookingDateSelector, bookingOverlayLoadingSelector, bookingSlotsSelector } from '@/recoil/booking.atom'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, formatDateToDDMMYYYY, formatTimeTo12Hour } from '@/lib/utils'
 
 type DividedSlots = {
   morning: string[][];
@@ -64,7 +64,7 @@ const TimePicker = () => {
             {dividedSlots.morning.length > 0 ? (
               <div className='flex flex-wrap gap-2'>
                 {dividedSlots.morning.map(([start, end], index) => (
-                  <Button disabled={isAvailable([start, end])} onClick={() => setBookingSlots([start, end])} variant={"outline"} className={cn(bookingSlot[0] == start && bookingSlot[1] == end && "bg-gray-200", 'rounded-2xl focus:bg-gray-200 shadow-md  text-xs')} key={index}>{`${start} - ${end}`}</Button>
+                  <Button disabled={isAvailable([start, end])} onClick={() => setBookingSlots([start, end])} variant={"outline"} className={cn(bookingSlot[0] == start && bookingSlot[1] == end && "bg-gray-200", 'rounded-2xl focus:bg-gray-200 shadow-md  text-xs')} key={index}>{formatTimeTo12Hour(start)}</Button>
                 ))}
               </div>
             ) : (
@@ -74,18 +74,17 @@ const TimePicker = () => {
             {dividedSlots.afternoon.length > 0 ? (
               <div className='flex flex-wrap gap-2'>
                 {dividedSlots.afternoon.map(([start, end], index) => (
-                  <Button disabled={isAvailable([start, end])} onClick={() => setBookingSlots([start, end])} variant={"outline"} className={cn(bookingSlot[0] == start && bookingSlot[1] == end && "bg-gray-200", 'rounded-2xl focus:bg-gray-200 shadow-md  text-xs')} key={index}>{`${start} - ${end}`}</Button>
+                  <Button disabled={isAvailable([start, end])} onClick={() => setBookingSlots([start, end])} variant={"outline"} className={cn(bookingSlot[0] == start && bookingSlot[1] == end && "bg-gray-200", 'rounded-2xl focus:bg-gray-200 shadow-md  text-xs')} key={index}>{formatTimeTo12Hour(start)}</Button>
                 ))}
               </div>
             ) : (
               <p>No slots available</p>
             )}
-
             <h3 className='text-gray-600 mt-4 text-base'>Evening</h3>
             {dividedSlots.evening.length > 0 ? (
               <div className='flex flex-wrap gap-2'>
                 {dividedSlots.evening.map(([start, end], index) => (
-                  <Button disabled={isAvailable([start, end])} onClick={() => setBookingSlots([start, end])} variant={"outline"} className={cn(bookingSlot[0] == start && bookingSlot[1] == end && "bg-gray-200", 'rounded-2xl focus:bg-gray-200 shadow-md text-xs ')} key={index}>{`${start} - ${end}`}</Button>
+                  <Button disabled={isAvailable([start, end])} onClick={() => setBookingSlots([start, end])} variant={"outline"} className={cn(bookingSlot[0] == start && bookingSlot[1] == end && "bg-gray-200", 'rounded-2xl focus:bg-gray-200 shadow-md text-xs ')} key={index}>{formatTimeTo12Hour(start)}</Button>
                 ))}
               </div>
             ) : (

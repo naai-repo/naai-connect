@@ -103,7 +103,7 @@ declare type ServiceVariableType = {
   variablePrice: number;
   variableCutPrice: number;
   variableTime: number;
-  _id: string;
+  id: string;
   selected?:boolean;
 }
 

@@ -1,7 +1,7 @@
 import { currencyConverter, dehash } from '@/lib/utils';
 import { hashSelector, loginDialogSelector, userIdSelector } from '@/recoil/auth.atom';
 import { bookingDialogSelector, bookingSlotsSelector, cartTotalSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
-import { artistsSelector, getCartServicesSelector, resetCartServicesSelector, salonIdSelector } from '@/recoil/salon.atom';
+import { artistsSelector, getCartServicesSelector, resetCartServicesSelector, salonIdSelector, stepOneCartSelector } from '@/recoil/salon.atom';
 import { ArrowRightFromLine, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -29,10 +29,9 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
   const hash = useRecoilValue(hashSelector);
   const user = dehash(localStorage.getItem("accessToken") || "",hash);
   const allArtists = useRecoilValue(artistsSelector);
-  
+  const [cartPrice,setCartPrice] = useRecoilState(stepOneCartSelector);
   
   useEffect(() => {
-    if (selectedServicesArtist.length > 0) {
       const discountedPrice = selectedServicesArtist.reduce((accum, serviceArtist) => {
         if (serviceArtist.service.variables.length > 0) {
           return accum + (serviceArtist.service.variables.find((variable) => variable.selected)?.variableCutPrice ?? 0);
@@ -51,19 +50,6 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
         return accum + (serviceArtist.service.cutPrice ?? 0)
       }, 0)
       setCartTotal({ original: price, discounted: discountedPrice })
-    }else{
-      if (cartServices.length > 0) {
-        const total = cartServices.reduce((acc, service) => {
-          if (service.variables.length > 0) {
-            const selectedVariable = service.variables.find(variable => variable.selected);
-            return acc + (selectedVariable?.variableCutPrice || 0);
-          }
-          return acc + service.cutPrice;
-        }, 0);
-        
-        setCartTotal({ original: total, discounted: total } as cartTotalType);
-      }
-    }
   }, [selectedServicesArtist]);
   
   if (!cartServices.length) {
@@ -74,10 +60,15 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
     <div className='flex justify-between items-center w-full justify-self-center relative p-5 shadow-md  bg-[#fbfbfb] border border-gray-600 rounded-lg'>
       <div className='flex flex-col text-base text-start font-semibold'>
         <span className='text-base text-gray-600'>Total</span>
-        <div>
-          <span className='line-through text-gray-600'>{currencyConverter(cartTotal.original)}</span>
-          <span className='pl-2'>{currencyConverter(cartTotal.discounted)}</span>
-        </div>
+        {progress==0?<div>
+          <span className='line-through text-gray-600'>{currencyConverter(cartPrice)}</span>
+            <span className='pl-2'>{currencyConverter(cartPrice)}</span>
+        </div>:
+          <div>
+            <span className='line-through text-gray-600'>{currencyConverter(cartTotal.original)}</span>
+            <span className='pl-2'>{currencyConverter(cartTotal.discounted)}</span>
+          </div>
+        }
       </div>
       <ContinueButton progress={progress}  onProgressChange={() =>{
         if(progress==1 && !user) {
@@ -89,6 +80,7 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
         className='absolute -top-4 -right-3 rounded-full p-2 '
         variant="outline"
         onClick={() => {
+          setCartPrice(0);
           clearCart();
           setbookingDialog(false);
         }}

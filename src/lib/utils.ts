@@ -46,8 +46,9 @@ export function formatDate(date: Date | string): string {
 
 export const formatTimeTo12Hour = (time: string) => {
   const [hours, minutes] = time?.split(":").map(Number);
-  const adjustedHours = hours % 12 || 12; // Convert 0 to 12 for midnight
-  return `${adjustedHours}:${minutes.toString().padStart(2, "0")}`;
+  const period = hours >= 12 ? "PM" : "AM";
+  const adjustedHours = hours % 12 || 12; 
+  return `${adjustedHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 };
 
 export function hashString(input: string, secret: number): string {

@@ -6,6 +6,7 @@ declare type SalonAtomType = {
   services:SingleSalonServiceDataType[];
   selectedService:SingleSalonServiceDataType;
   categories:string[];
+  stepOneCart:number;
   isOverLayLoading:boolean;
   isOpen:boolean
 }

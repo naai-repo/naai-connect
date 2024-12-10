@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { selectedServiceSelector, serviceAddToCartSelector } from '@/recoil/salon.atom';
+import { selectedServiceSelector, serviceAddToCartSelector, stepOneCartSelector } from '@/recoil/salon.atom';
 import Image from 'next/image';
 import { Plus, Variable } from 'lucide-react';
 import { currencyConverter } from '@/lib/utils';
@@ -24,6 +24,7 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
   const selectedService = useRecoilValue(selectedServiceSelector);
   const setServiceAddToCart = useSetRecoilState(serviceAddToCartSelector);
   const [selectedVariableService,setSelectedVariableService] = useState(selectedService);
+  const setStepOneCart = useSetRecoilState(stepOneCartSelector);
 
   const openSheet = () => {
     setData({ open: true });
@@ -52,6 +53,7 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
   };
 
   const addToCart = () => {
+    setStepOneCart(prev=>prev+(selectedVariableService.variables.find(variable=>variable.selected)?.variableCutPrice || 0))
     setServiceAddToCart({...selectedVariableService,incart:true});
   } 
 

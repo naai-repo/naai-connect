@@ -37,22 +37,55 @@ const MakeAppointment = () => {
     setLoading(true);
     try {
       setisOverLayLoading(true);
-      let payload: MakeAppointmentPayload = {
+      let payload = {
         key: timeSchedule?.timeSlots[0].key as number,
         salonId,
         bookingDate:formatDateToDDMMYYYY(removeTimeZoneOffsetToDate(bookingDate)),
         timeSlot: bookingTimeSlot,
         phoneNumber: userData?.phoneNumber.toString() as string,
-        timeSlots: timeSchedule?.timeSlots as allTimeSlotsType[]
+        timeSlots: timeSchedule?.timeSlots.map((slot)=>{
+          return {
+            ...slot,
+            order:slot.order.map((ord)=>{
+              let variableToAdd = {} as MakeAppointmentVariableType;
+              if(ord.variable){
+                variableToAdd = {
+                  _id:ord.variable.id,
+                  variableCutPrice:ord.variable.variableCutPrice,
+                  variablePrice:ord.variable.variablePrice,
+                  variableName:ord.variable.variableName,
+                  variableTime:ord.variable.variableTime,
+                  variableType:ord.variable.variableType,
+                }  as MakeAppointmentVariableType
+              }
+              return {
+                ...ord,
+                service:{
+                  ...ord.service,
+                  variables:ord.service?.variables?.map(()=>{
+                    return {
+                      _id:ord.variable.id,
+                      variableCutPrice:ord.variable.variableCutPrice,
+                      variablePrice:ord.variable.variablePrice,
+                      variableName:ord.variable.variableName,
+                      variableTime:ord.variable.variableTime,
+                      variableType:ord.variable.variableType,
+                    }
+                  })
+                },
+                variable:variableToAdd
+              }
+            })
+          }  
+        }) as makeAppointmentAllTimeSlotPayloadType[]
       }
       const token = dehash(localStorage.getItem('accessToken') || "",hash);
       let res = await bookingService.makeAppointment(payload, token as string);
       setAppointment(res.data);
-    } catch (error) {
-      console.error("error while making appointment", error);
-    } finally {
       setisOverLayLoading(false);
       setLoading(false);
+    } catch (error) {
+      console.error("error while making appointment", error);
     }
   }
   const getOriginalServicePrice = (serviceId: string) => {
