@@ -14,6 +14,7 @@ export function useBookingService() {
 
   const makeAppointment = async (payload:MakeAppointmentPayload,token:string):Promise<MakeAppointmentController>=>{
     try {
+      
       let res = await Booking.makeAppointment(payload,token);
       return successResponse<typeof res>({ data: res });
     } catch (error:any) {
@@ -30,6 +31,7 @@ export function useBookingService() {
           bookingMode:"app"
         }
       }
+      modifiedPayload = JSON.parse(JSON.stringify(modifiedPayload));
       let res = await Booking.confirmAppointment(modifiedPayload,token);
       return successResponse<typeof res>({ data: res });
     } catch (error:any) {

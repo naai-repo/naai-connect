@@ -17,6 +17,7 @@ const defaultState = {
     search:"",
   },
   isOpen: false,
+  stepOneCart:0
 };
 
 export const salonAtom = atom({
@@ -37,6 +38,21 @@ export const salonIdSelector = selector<string>({
     }));
   },
 });
+
+// stepOneCart  selector
+export const stepOneCartSelector = selector<number>({
+  key: "stepOneCartSelector",
+  get: ({ get }) => {
+    const salonData = get(salonAtom);
+    return salonData.stepOneCart ?? 0;
+  },
+  set: ({ set }, val) => {
+    set(salonAtom, (prev) => ({
+      ...prev,
+      stepOneCart:val as number
+    }))
+  }
+})
 
 // artist selector
 export const artistsSelector = selector<SingleSalonArtistDataType[]>({

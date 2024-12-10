@@ -12,6 +12,13 @@ declare type allTimeSlotsType = {
   order: orderType[];
 };
 
+declare type makeAppointmentAllTimeSlotPayloadType = {
+  key: number;
+  possible: boolean;
+  timeSlot: singletimeSlotType[];
+  order: makeAppointmentOrderType[];
+}
+
 declare type orderType = {
   service: {
     reminderDays: number;
@@ -29,9 +36,43 @@ declare type orderType = {
     createdAt: string;
     updatedAt: string;
   };
+  variable:ServiceVariableType;
   artist: string;
   time: 1;
 };
+
+
+
+declare type makeAppointmentOrderType = {
+  service: {
+    reminderDays: number;
+    _id: string;
+    salonId: string;
+    category: string;
+    serviceTitle: string;
+    description: string;
+    targetGender: string;
+    avgTime: number;
+    variables: MakeAppointmentVariableType[];
+    basePrice: number;
+    cutPrice: number;
+    productsUsed: [];
+    createdAt: string;
+    updatedAt: string;
+  };
+  variable:MakeAppointmentVariableType;
+  artist: string;
+  time: 1;
+}
+
+declare type MakeAppointmentVariableType = {
+  variableType: string;
+  variableName: string;
+  variablePrice: number;
+  variableCutPrice: number;
+  variableTime: number;
+  _id: string;
+}
 
 declare type singletimeSlotType = {
   slot: string[];
@@ -56,7 +97,7 @@ declare type MakeAppointmentPayload = {
   phoneNumber: string;
   timeSlot: string[];
   bookingDate: string;
-  timeSlots: allTimeSlotsType[];
+  timeSlots: makeAppointmentAllTimeSlotPayloadType[];
 };
 
 declare type MakeAppointmentResType = {
