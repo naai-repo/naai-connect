@@ -40,46 +40,46 @@ const MakeAppointment = () => {
       let payload = {
         key: timeSchedule?.timeSlots[0].key as number,
         salonId,
-        bookingDate:formatDateToDDMMYYYY(removeTimeZoneOffsetToDate(bookingDate)),
+        bookingDate: formatDateToDDMMYYYY(removeTimeZoneOffsetToDate(bookingDate)),
         timeSlot: bookingTimeSlot,
         phoneNumber: userData?.phoneNumber.toString() as string,
-        timeSlots: timeSchedule?.timeSlots.map((slot)=>{
+        timeSlots: timeSchedule?.timeSlots.map((slot) => {
           return {
             ...slot,
-            order:slot.order.map((ord)=>{
+            order: slot.order.map((ord) => {
               let variableToAdd = {} as MakeAppointmentVariableType;
-              if(ord.variable){
+              if (ord.variable) {
                 variableToAdd = {
-                  _id:ord.variable.id,
-                  variableCutPrice:ord.variable.variableCutPrice,
-                  variablePrice:ord.variable.variablePrice,
-                  variableName:ord.variable.variableName,
-                  variableTime:ord.variable.variableTime,
-                  variableType:ord.variable.variableType,
-                }  as MakeAppointmentVariableType
+                  _id: ord.variable.id,
+                  variableCutPrice: ord.variable.variableCutPrice,
+                  variablePrice: ord.variable.variablePrice,
+                  variableName: ord.variable.variableName,
+                  variableTime: ord.variable.variableTime,
+                  variableType: ord.variable.variableType,
+                } as MakeAppointmentVariableType
               }
               return {
                 ...ord,
-                service:{
+                service: {
                   ...ord.service,
-                  variables:ord.service?.variables?.map(()=>{
+                  variables: ord.service?.variables?.map(() => {
                     return {
-                      _id:ord.variable.id,
-                      variableCutPrice:ord.variable.variableCutPrice,
-                      variablePrice:ord.variable.variablePrice,
-                      variableName:ord.variable.variableName,
-                      variableTime:ord.variable.variableTime,
-                      variableType:ord.variable.variableType,
+                      _id: ord.variable.id,
+                      variableCutPrice: ord.variable.variableCutPrice,
+                      variablePrice: ord.variable.variablePrice,
+                      variableName: ord.variable.variableName,
+                      variableTime: ord.variable.variableTime,
+                      variableType: ord.variable.variableType,
                     }
                   })
                 },
-                variable:variableToAdd
+                variable: variableToAdd
               }
             })
-          }  
+          }
         }) as makeAppointmentAllTimeSlotPayloadType[]
       }
-      const token = dehash(localStorage.getItem('accessToken') || "",hash);
+      const token = dehash(localStorage.getItem('accessToken') || "", hash);
       let res = await bookingService.makeAppointment(payload, token as string);
       setAppointment(res.data);
       setisOverLayLoading(false);
@@ -94,16 +94,22 @@ const MakeAppointment = () => {
   }
 
   const ConfirmBooking = async () => {
-    const token = dehash(localStorage.getItem('accessToken')|| "",hash);
-    let res = await bookingService.confirmAppointment(appointment as MakeAppointmentResType,token as string);
-    if(res.status==200){
-      setConfirmDialog(true);
-      setSelctedArtistService([]);
-      setBookingDate(new Date());
-      setBookingSlot([]);
-      resetCart();
-      setProgress(0);
-      setOpen(false);
+    try {
+      setisOverLayLoading(true)
+      const token = dehash(localStorage.getItem('accessToken') || "", hash);
+      let res = await bookingService.confirmAppointment(appointment as MakeAppointmentResType, token as string);
+      if (res.status == 200) {
+        setConfirmDialog(true);
+        setSelctedArtistService([]);
+        setBookingDate(new Date());
+        setBookingSlot([]);
+        resetCart();
+        setProgress(0);
+        setOpen(false);
+      }
+      setisOverLayLoading(false);
+    } catch (error) {
+      console.error("boooking not confirmed")
     }
   }
 
@@ -115,57 +121,57 @@ const MakeAppointment = () => {
 
   return (
     <div className='w-full p-3'>
-      <ConfirmBookingDialog ref={ConfirmBookingRef}/>
-        <div className='flex flex-col gap-5'>
-          <div className='flex p-2 shadow border rounded-md text-base font-semibold capitalize text-black'>
-            <div className='flex flex-col items-center border-r-2 flex-grow '>
-              <p className='text-sm font-normal'>Booking For</p>
-              {appointment?.booking?.userName}
-            </div>
-            <div className='flex flex-col items-center border-r-2 flex-grow'>
-              <p className='text-sm font-normal'>Booking Date</p>
-              {formatDate(appointment?.booking?.bookingDate as string)}
-            </div>
-            <div className='flex flex-col items-center  flex-grow'>
-              <p className='text-sm font-normal'>Booking Time</p>
-              {appointment?.booking?.timeSlot.start && formatTimeTo12Hour(appointment?.booking?.timeSlot.start as string)}
-            </div>
+      <ConfirmBookingDialog ref={ConfirmBookingRef} />
+      <div className='flex flex-col gap-5'>
+        <div className='flex p-2 shadow border rounded-md text-base font-semibold capitalize text-black'>
+          <div className='flex flex-col items-center border-r-2 flex-grow '>
+            <p className='text-sm font-normal'>Booking For</p>
+            {appointment?.booking?.userName}
           </div>
-          <div className='border shadow-md rounded-lg p-3 pt-1 '>
-            <div className='flex flex-col gap-2 border-b-2'>
-              <h4 className='text-lg text-gray-500'>Services</h4>
-              {appointment?.booking?.artistServiceMap?.map((booking, ind) => {
-                return (
-                  <div className={cn('w-full flex justify-between items-start', ind != appointment.booking.artistServiceMap.length - 1 && "border-b")}>
-                    <div>
-                      <h4 className='text-base'>{booking.serviceName}</h4>
-                      <p>{booking.artistName ? booking.artistName:"Random Artist"}</p>
-                    </div>
-                    <p>+ {currencyConverter(getOriginalServicePrice(booking.serviceId))}</p>
-                  </div>
-                )
-              })}
-            </div>
-            <div className='flex flex-col gap-2 pt-2 uppercase text-lg'>
-              <div className='flex justify-between'>
-                <h3>subtotal</h3>
-                + {currencyConverter(totalBookingCost.original)}
-              </div>
-              <div className='flex justify-between'>
-                <h3 >discount</h3>
-                - {currencyConverter(totalBookingCost.original-totalBookingCost.discounted)}
-              </div>
-            </div>
+          <div className='flex flex-col items-center border-r-2 flex-grow'>
+            <p className='text-sm font-normal'>Booking Date</p>
+            {formatDate(appointment?.booking?.bookingDate as string)}
           </div>
-          <div className='border rounded-lg p-3 shadow-md flex justify-between uppercase text-xl font-semibold text-gray-900'>
-            <h2>Grand total</h2>
-            {currencyConverter(totalBookingCost.discounted)}
+          <div className='flex flex-col items-center  flex-grow'>
+            <p className='text-sm font-normal'>Booking Time</p>
+            {appointment?.booking?.timeSlot.start && formatTimeTo12Hour(appointment?.booking?.timeSlot.start as string)}
           </div>
         </div>
+        <div className='border shadow-md rounded-lg p-3 pt-1 '>
+          <div className='flex flex-col gap-2 border-b-2'>
+            <h4 className='text-lg text-gray-500'>Services</h4>
+            {appointment?.booking?.artistServiceMap?.map((booking, ind) => {
+              return (
+                <div className={cn('w-full flex justify-between items-start', ind != appointment.booking.artistServiceMap.length - 1 && "border-b")}>
+                  <div>
+                    <h4 className='text-base'>{booking.serviceName}</h4>
+                    <p>{booking.artistName ? booking.artistName : "Random Artist"}</p>
+                  </div>
+                  <p>+ {currencyConverter(getOriginalServicePrice(booking.serviceId))}</p>
+                </div>
+              )
+            })}
+          </div>
+          <div className='flex flex-col gap-2 pt-2 uppercase text-lg'>
+            <div className='flex justify-between'>
+              <h3>subtotal</h3>
+              + {currencyConverter(totalBookingCost.original)}
+            </div>
+            <div className='flex justify-between'>
+              <h3 >discount</h3>
+              - {currencyConverter(totalBookingCost.original - totalBookingCost.discounted)}
+            </div>
+          </div>
+        </div>
+        <div className='border rounded-lg p-3 shadow-md flex justify-between uppercase text-xl font-semibold text-gray-900'>
+          <h2>Grand total</h2>
+          {currencyConverter(totalBookingCost.discounted)}
+        </div>
+      </div>
       <div className='p-1 bg-background py-3 fixed bottom-0 w-[90%] '>
-        <Button onClick={()=>{
+        <Button onClick={() => {
           ConfirmBooking();
-      }} className='w-full'>Confirm Booking</Button>
+        }} className='w-full'>Confirm Booking</Button>
       </div>
     </div>
   )
