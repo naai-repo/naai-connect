@@ -9,7 +9,7 @@ import { ArtistProfile } from './Artists/ArtistProfile'
 import ImageCarousel from './ImageCarousel'
 import LoginDialog from './LoginDialog/loginDialog'
 import Wrapper from './Wrapper'
-import BookingWrapper from '@/components/booking/BookingWrapper'
+import BookingWrapper from '@/components/bookings/BookingWrapper'
 
 
 const Hero = () => {

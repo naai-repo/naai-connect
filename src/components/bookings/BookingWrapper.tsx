@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader
-} from "../../components/ui/dialog";
+} from "../ui/dialog";
 
 import { bookingDateSelector, bookingDialogSelector, bookingOverlayLoadingSelector, bookingSlotsSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
 import { X } from 'lucide-react';

@@ -17,7 +17,7 @@ import { ArtistByIdSelector } from '@/recoil/artist.atom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSalonService } from '@/hooks/salon.hooks';
 import Searchbar from '@/components/serviceComponents/Filter/FilterCategories';
-import BookingWrapper from '@/components/booking/BookingWrapper';
+import BookingWrapper from '@/components/bookings/BookingWrapper';
 
 const Page = () => {
   const params = useParams();
