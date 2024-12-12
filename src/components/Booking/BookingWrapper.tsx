@@ -6,10 +6,8 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader
-} from "@/components/ui/dialog";
+} from "../../components/ui/dialog";
 
-import Cart from '@/components/demoCart/cart';
-import { Button } from '@/components/ui/button';
 import { bookingDateSelector, bookingDialogSelector, bookingOverlayLoadingSelector, bookingSlotsSelector, progressSelector, selctedArtistTypeSelector, selectedArtistServiceSelector } from '@/recoil/booking.atom';
 import { X } from 'lucide-react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -17,7 +15,9 @@ import ArtistSelect from './components/ArtistSelect';
 import MakeAppointment from './components/makeAppointment/MakeAppointment';
 import Progress from './components/Progress';
 import SlotWrapper from './components/timeSlot/SlotWrapper';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '../ui/button';
+import { Spinner } from '../ui/spinner';
+import Cart from '../demoCart/cart';
 
 const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   const [open, setOpen] = useRecoilState(bookingDialogSelector);
