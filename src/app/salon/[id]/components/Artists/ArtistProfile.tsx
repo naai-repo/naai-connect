@@ -19,7 +19,7 @@ import Image from "next/image";
 import { forwardRef, useImperativeHandle } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import Profile from "../../../../../assets/Artist.svg";
-import Searchbar from "../Filter/FilterCategories";
+import Searchbar from "@/components/serviceComponents/Filter/FilterCategories";
 
 export const ArtistProfile = forwardRef<ArtistDialgReftype>(({ }, ref) => {
   const [open, setOpen] = useRecoilState(ArtistDialgSelector);

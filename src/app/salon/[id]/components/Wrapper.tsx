@@ -8,7 +8,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import MenIcon from "../../../../assets/images/men_icon.png"
 import WomenIcon from "../../../../assets/images/women_icon.png"
 import AllArtistCarousel from './Artists/carouselWrapper'
-import Searchbar from './Filter/FilterCategories'
+import Searchbar from '@/components/serviceComponents/Filter/FilterCategories'
 
 const Wrapper = () => {
   return (

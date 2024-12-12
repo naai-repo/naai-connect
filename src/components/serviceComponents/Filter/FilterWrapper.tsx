@@ -6,8 +6,8 @@ import {
 import { ApplyFilterSelector, resetFilterSelector } from '@/recoil/salon.atom';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { Button } from '../../../../../components/ui/button';
 import { CategoryFilter, GenderFilter, SortFilter } from './FilterCategories';
+import { Button } from "@/components/ui/button";
 
 
 const Filter = forwardRef<ServiceFilterRefType>(({ }, ref) => {

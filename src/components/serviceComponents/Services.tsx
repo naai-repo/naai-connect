@@ -1,11 +1,9 @@
 
-import Filter from '@/app/salon/[id]/components/Filter/FilterWrapper'
 import SingleService from '@/components/serviceComponents/singleService'
 import { filterSelector, pureServiceSelector, serviceSelector } from '@/recoil/salon.atom'
 import { SlidersHorizontal } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import Searchbar from '../../app/salon/[id]/components/Filter/FilterCategories'
 import { cn } from '@/lib/utils'
 import { Card } from '../ui/card'
 
