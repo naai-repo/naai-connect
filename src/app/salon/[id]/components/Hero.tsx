@@ -5,11 +5,11 @@ import { isSalonOpenSelector, singleSalonDataSelector } from '@/recoil/salon.ato
 import { MapPinned, PhoneCall, Share2 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import BookingWrapper from '../../../../components/booking/BookingWrapper'
 import { ArtistProfile } from './Artists/ArtistProfile'
 import ImageCarousel from './ImageCarousel'
 import LoginDialog from './LoginDialog/loginDialog'
 import Wrapper from './Wrapper'
+import BookingWrapper from '@/components/booking/BookingWrapper'
 
 
 const Hero = () => {
