@@ -11,13 +11,13 @@ import { Phone, Share2 } from 'lucide-react';
 import { InstagramLogoIcon } from '@radix-ui/react-icons';
 import Services from '@/components/serviceComponents/Services';
 import Cart from '@/components/demoCart/cart';
-import Searchbar from '@/app/salon/[id]/components/Filter/FilterCategories';
 import BookingWrapper from '@/components/booking/BookingWrapper';
 import MainWrapper from '@/components/mainWrapper/mainWrapper';
 import { useArtistService } from '@/hooks/artist.hook';
 import { ArtistByIdSelector } from '@/recoil/artist.atom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSalonService } from '@/hooks/salon.hooks';
+import Searchbar from '@/components/serviceComponents/Filter/FilterCategories';
 
 const Page = () => {
   const params = useParams();
