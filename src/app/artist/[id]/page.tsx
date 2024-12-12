@@ -17,7 +17,7 @@ import { ArtistByIdSelector } from '@/recoil/artist.atom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSalonService } from '@/hooks/salon.hooks';
 import Searchbar from '@/components/serviceComponents/Filter/FilterCategories';
-import BookingWrapper from '@/components/booking/BookingWrapper';
+// import BookingWrapper from '@/components/booking/BookingWrapper';
 
 const Page = () => {
   const params = useParams();
@@ -25,7 +25,7 @@ const Page = () => {
   const artistId = localStorage.getItem("selectedArtist");
   const [selectedArtist,setSelctedArtist] = useRecoilState(ArtistByIdSelector);
   const salonData = useRecoilValue(singleSalonDataSelector);
-  const bookingRef = useRef<BookingSheetType>(null);
+  // const bookingRef = useRef<BookingSheetType>(null);
   const artistService = useArtistService();
   const salonService = useSalonService();
   const [loading,setLoading] = useState(false);
@@ -69,7 +69,7 @@ const Page = () => {
       className: "grid flex-1 items-start gap-4 p-2 pt-0 sm:px-6 sm:py-0 md:gap-4 h-full w-full"
     }}>
       <div className="w-full z-10">
-      <BookingWrapper ref={bookingRef} />
+      {/* <BookingWrapper ref={bookingRef} /> */}
         {loading?<Skeleton/>:
         <Card className="w-full border-0 shadow-none">
           <CardHeader className="sticky top-12 bg-[#fbfbfb] w-full">
