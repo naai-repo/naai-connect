@@ -11,7 +11,7 @@ import { Phone, Share2 } from 'lucide-react';
 import { InstagramLogoIcon } from '@radix-ui/react-icons';
 import Services from '@/components/serviceComponents/Services';
 import Cart from '@/components/demoCart/cart';
-import BookingWrapper from '@/components/booking/BookingWrapper';
+import BookingWrapper from '../../../components/booking/BookingWrapper'
 import MainWrapper from '@/components/mainWrapper/mainWrapper';
 import { useArtistService } from '@/hooks/artist.hook';
 import { ArtistByIdSelector } from '@/recoil/artist.atom';
