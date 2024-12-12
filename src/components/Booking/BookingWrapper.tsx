@@ -80,5 +80,5 @@ const BookingWrapper = forwardRef<BookingSheetType>(({ }, ref) => {
   )
 })
 
-export default BookingWrapper;
+export default memo(BookingWrapper);
 

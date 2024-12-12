@@ -1,19 +1,17 @@
 "use client"
-import React, { useRef } from "react"
+import { Button } from "@/components/ui/button"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { hashSelector, loginDialogSelector, loginFromHeaderSelector, loginStepSelector, otpSelector, userIdSelector } from "@/recoil/auth.atom"
-import { Button } from "@/components/ui/button"
 import { useAuthServices } from "@/hooks/auth.hoook"
-import { progressSelector } from "@/recoil/booking.atom"
-import { cookies } from "next/headers"
-import useCookie from "@/hooks/cookie.hook"
 import { hashString } from "@/lib/utils"
+import { hashSelector, loginDialogSelector, loginFromHeaderSelector, loginStepSelector, otpSelector, userIdSelector } from "@/recoil/auth.atom"
+import { progressSelector } from "@/recoil/booking.atom"
 import { confirmDialogSelector, confirmTextSelector } from "@/recoil/drawer.atom"
+import { useRef } from "react"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 
 export function OTPInputControle() {
   const [value, setValue] = useRecoilState(otpSelector);
