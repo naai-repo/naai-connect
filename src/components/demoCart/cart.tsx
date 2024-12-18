@@ -9,7 +9,6 @@ import { Button } from '../ui/button';
 
 // Type definitions
 type ContinueButtonProps = {
-  progress: number;
   onProgressChange: () => void;
 };
 
@@ -34,11 +33,11 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
   useEffect(() => {
       const discountedPrice = selectedServicesArtist.reduce((accum, serviceArtist) => {
         if (serviceArtist.service.variables.length > 0) {
-          return accum + (serviceArtist.service.variables.find((variable) => variable.selected)?.variableCutPrice ?? 0);
+          return accum + (serviceArtist.service.variables.find((variable) => variable.selected)?.variablePrice ?? 0);
         } else {
           const selectedArtist = allArtists.find((artist) => artist.id === serviceArtist.artist)
           const foundService = selectedArtist?.services.find((service) => service.serviceId == serviceArtist.service.id);
-          return accum + (foundService?.cutPrice ?? 0);
+          return accum + (foundService?.price ?? 0);
         }
       }, 0)
 
@@ -61,8 +60,8 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
       <div className='flex flex-col text-base text-start font-semibold'>
         <span className='text-base text-gray-600'>Total</span>
         {progress==0?<div>
-          <span className='line-through text-gray-600'>{currencyConverter(cartPrice)}</span>
-            <span className='pl-2'>{currencyConverter(cartPrice)}</span>
+          <span className='line-through text-gray-600'>{currencyConverter(cartPrice.cutPrice)}</span>
+            <span className='pl-2'>{currencyConverter(cartPrice.basePrice)}</span>
         </div>:
           <div>
             <span className='line-through text-gray-600'>{currencyConverter(cartTotal.original)}</span>
@@ -70,7 +69,7 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
           </div>
         }
       </div>
-      <ContinueButton progress={progress}  onProgressChange={() =>{
+      <ContinueButton onProgressChange={() =>{
         if(progress==1 && !user) {
           setOpenLoginDialog(true);
         }
@@ -80,7 +79,10 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
         className='absolute -top-4 -right-3 rounded-full p-2 '
         variant="outline"
         onClick={() => {
-          setCartPrice(0);
+          setCartPrice({
+            basePrice:0,
+            cutPrice:0
+          });
           clearCart();
           setbookingDialog(false);
         }}
@@ -92,7 +94,7 @@ const Cart: React.FC<CartPropsType> = ({fromBooking}) => {
   );
 };
 
-const ContinueButton: React.FC<ContinueButtonProps> = ({ progress, onProgressChange }) => {
+const ContinueButton: React.FC<ContinueButtonProps> = ({ onProgressChange }) => {
   const [displayText, setDisplayText] = useState("Select Artist");
   const artistSelectionType = useRecoilValue(selctedArtistTypeSelector);
   const selectedArtistService = useRecoilValue(selectedArtistServiceSelector);
@@ -101,6 +103,7 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({ progress, onProgressCha
   const selectedSlot = useRecoilValue(bookingSlotsSelector)
   const hash = useRecoilValue(hashSelector);
   const user = dehash(localStorage.getItem("accessToken") || "",hash);
+  const progress = useRecoilValue(progressSelector);
   
   useEffect(() => {
     if (progress === 0) setDisplayText("Select Artist");

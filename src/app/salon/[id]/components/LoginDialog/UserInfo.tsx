@@ -1,25 +1,16 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { loginDialogSelector, loginFromHeaderSelector, loginStepSelector, otpResSelector, phoneNumberSelector, userIdSelector, userInputFieldSelector } from '@/recoil/auth.atom';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { loginDialogSelector, loginFromHeaderSelector, userIdSelector, userInputFieldSelector } from '@/recoil/auth.atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthServices } from '@/hooks/auth.hoook';
-import { ArrowLeftFromLine } from 'lucide-react';
-import { OTPInputControle } from './Otp';
 import { progressSelector } from "@/recoil/booking.atom";
 import { confirmDialogSelector, confirmTextSelector } from "@/recoil/drawer.atom";
 

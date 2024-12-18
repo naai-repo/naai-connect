@@ -12,6 +12,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import Hero from "./components/Hero";
 import { useAuthServices } from "@/hooks/auth.hoook";
 import { Skeleton } from "@/components/ui/skeleton";
+import DiscountBanner from "@/components/discount/DiscountBanner";
 
 const DynamicPage = () => {
   const params = useParams();
@@ -78,12 +79,13 @@ const DynamicPage = () => {
 
   return (
     <MainWrapper name="Salon" parentWrapper={{
-      className : "flex flex-col sm:px-4 sm:py-4  h-full"
+      className : "flex flex-col  sm:py-4  h-full"
     }} mainWrapper={{
-      className : "grid flex-1 items-start gap-4 p-2 pt-0 sm:px-6 sm:py-0 md:gap-4 h-full w-full"
+      className : "grid flex-1 items-start gap-4 p-2 pt-0  sm:py-0 md:gap-4 h-full w-full"
     }}>
+      {salonData?.data.discount && <DiscountBanner/>}
       {loading?<Skeleton/>:
-      <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10">
+      <div className="flex flex-col w-full items-start gap-4 md:gap-4 h-full z-10 sm:px-10">
         <div className="w-[94%] right-[3%] fixed bottom-5 z-50">
           <Cart/>
         </div>

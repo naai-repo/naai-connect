@@ -37,10 +37,9 @@ const Services = ({ from }: { from: string }) => {
     if (filter.gender) {
       setFilterCount(count => count + 1);
       updatedServices = updatedServices.filter(service =>
-        service.targetGender === filter.gender
+        service.targetGender === filter.gender || service.targetGender === 'unisex'
       );
     }
-
     setServices(updatedServices);
   }, [filter]);
 

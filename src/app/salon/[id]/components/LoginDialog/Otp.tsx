@@ -23,7 +23,6 @@ export function OTPInputControle() {
   const setProgress = useSetRecoilState(progressSelector);
   const isFromHeader = useRecoilValue(loginFromHeaderSelector);
   const setIsFromHeader = useSetRecoilState(loginFromHeaderSelector);
-  const ConfirmRef = useRef<ConfirmbookingRefType>(null);
   const setConfirmDialog = useSetRecoilState(confirmDialogSelector);
   const setConfirmText = useSetRecoilState(confirmTextSelector);
   

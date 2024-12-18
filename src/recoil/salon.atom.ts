@@ -17,7 +17,10 @@ const defaultState = {
     search:"",
   },
   isOpen: false,
-  stepOneCart:0
+  stepOneCart:{
+    basePrice:0,
+    cutPrice:0,
+  }
 };
 
 export const salonAtom = atom({
@@ -40,16 +43,16 @@ export const salonIdSelector = selector<string>({
 });
 
 // stepOneCart  selector
-export const stepOneCartSelector = selector<number>({
+export const stepOneCartSelector = selector<StepOneCartType>({
   key: "stepOneCartSelector",
   get: ({ get }) => {
     const salonData = get(salonAtom);
-    return salonData.stepOneCart ?? 0;
+    return salonData.stepOneCart ?? {cutPrice:0,basePrice:0};
   },
   set: ({ set }, val) => {
     set(salonAtom, (prev) => ({
       ...prev,
-      stepOneCart:val as number
+      stepOneCart:val as StepOneCartType
     }))
   }
 })

@@ -6,15 +6,20 @@ declare type SalonAtomType = {
   services:SingleSalonServiceDataType[];
   selectedService:SingleSalonServiceDataType;
   categories:string[];
-  stepOneCart:number;
+  stepOneCart:StepOneCartType
   isOverLayLoading:boolean;
   isOpen:boolean
+}
+
+declare type StepOneCartType = {
+  basePrice:number,
+  cutPrice:number
 }
 
 declare type filterState = {
   sortby?: "desc"|"asc",
   categories?:string,
-  gender?:"male"|"female",
+  gender?:"male"|"female"|"unisex",
   search?:string
 }
 

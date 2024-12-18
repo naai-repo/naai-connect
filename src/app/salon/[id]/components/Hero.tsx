@@ -1,3 +1,4 @@
+import BookingWrapper from '@/components/bookings/BookingWrapper'
 import StarRating from '@/components/rating/Rating'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -9,7 +10,6 @@ import { ArtistProfile } from './Artists/ArtistProfile'
 import ImageCarousel from './ImageCarousel'
 import LoginDialog from './LoginDialog/loginDialog'
 import Wrapper from './Wrapper'
-import BookingWrapper from '@/components/bookings/BookingWrapper'
 
 
 const Hero = () => {
@@ -17,6 +17,7 @@ const Hero = () => {
   const [isopen, setIsOpen] = useRecoilState(isSalonOpenSelector);
   const bookingRef = useRef<BookingSheetType>(null);
   const artistProfileref = useRef<ArtistDialgReftype>(null);
+  const loginDialogeRef = useRef<LoginDialogRefType>(null);
 
   useEffect(() => {
     const openingTime = new Date();
@@ -72,10 +73,11 @@ const Hero = () => {
     <div className='w-full px-1 pt-0 pb-0 flex flex-col'>
       <BookingWrapper ref={bookingRef} />
       <ArtistProfile ref={artistProfileref} />
-      <LoginDialog />
+      <LoginDialog ref={loginDialogeRef}/>
       <div className='flex flex-col gap-2 sticky pt-5 pb-3 top-[3.3rem] bg-[#fbfbfb] z-30'>
         <div className='flex justify-between w-full'>
-          <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name}</h2>
+          <h2 className='font-semibold text-2xl uppercase '>{salonData?.data?.name} 
+            <span className='font-normal text-lg'>( <span className='text-green-500'>{salonData?.data.discount && ` ${salonData.data.discount}% OFF `}</span>)</span></h2>
           <StarRating rating={salonData?.data.rating ?? 0} />
         </div>
         <div className='text-gray-500 text-sm'>

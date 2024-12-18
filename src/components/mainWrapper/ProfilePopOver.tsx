@@ -11,16 +11,21 @@ import { Button } from '../ui/button';
 import { LogInIcon, LogOutIcon, User } from 'lucide-react';
 import { loginDialogSelector, loginFromHeaderSelector } from '@/recoil/auth.atom';
 import { useSetRecoilState } from 'recoil';
+import { confirmDialogSelector, confirmTextSelector } from '@/recoil/drawer.atom';
 
 
 const ProfilePopOver = () => {
   const [data, setData] = useState({ open: false });
   const setOpenLoginDialog = useSetRecoilState(loginDialogSelector);
   const setIsFromHeader = useSetRecoilState(loginFromHeaderSelector);
-
+  const setConfirmDialog = useSetRecoilState(confirmDialogSelector);
+  const setConfirmText = useSetRecoilState(confirmTextSelector);
   const token = localStorage.getItem("accessToken");
 
   const handleLogout = () => {
+    setData({ ...data, open: true })
+    setConfirmDialog(true);
+    setConfirmText("Logout Successfull");
     localStorage.removeItem("accessToken");
     setIsFromHeader(false);
   }
@@ -48,8 +53,9 @@ const ProfilePopOver = () => {
               <span className='cursor-pointer'>Logout</span></div> :
               <div onClick={() => {
                 setIsFromHeader(true);
-                setOpenLoginDialog(true)
-                }} className='flex gap-2 items-center'><LogInIcon size={20} />
+                setOpenLoginDialog(true);
+                setData({ ...data, open: false })
+            }} className='flex gap-2 items-center'><LogInIcon size={20} />
                 <span className='cursor-pointer'>Login</span></div>}
           </DropdownMenuItem>
         </DropdownMenuContent>

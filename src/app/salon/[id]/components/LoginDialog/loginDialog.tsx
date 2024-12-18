@@ -16,8 +16,6 @@ import { ArrowLeftFromLine, X } from 'lucide-react';
 import { OTPInputControle } from './Otp';
 import UserInfo from "./UserInfo";
 
-const GENDERS = ["male", "female", "not specified"]
-
 const LoginDialog = forwardRef<LoginDialogRefType>(({}, ref) => {
   const [open, setOpen] = useRecoilState(loginDialogSelector);
   const [phoneNumber, setPhoneNumber] = useRecoilState(phoneNumberSelector);

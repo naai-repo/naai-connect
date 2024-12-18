@@ -23,7 +23,7 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
   const [data, setData] = useState({ open: false });
   const selectedService = useRecoilValue(selectedServiceSelector);
   const setServiceAddToCart = useSetRecoilState(serviceAddToCartSelector);
-  const [selectedVariableService,setSelectedVariableService] = useState(selectedService);
+  const [selectedVariableService, setSelectedVariableService] = useState(selectedService);
   const setStepOneCart = useSetRecoilState(stepOneCartSelector);
 
   const openSheet = () => {
@@ -39,23 +39,27 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
     return { openSheet, closeSheet };
   });
 
-  const handlevariableChange = (id:string)=>{
+  const handlevariableChange = (id: string) => {
     let service = {
       ...selectedService,
-      variables:selectedService.variables.map(variable=>{
-        if(variable.id===id){
-          return {...variable,selected:true}
+      variables: selectedService.variables.map(variable => {
+        if (variable.id === id) {
+          return { ...variable, selected: true }
         }
-        return {...variable,selected:false}
+        return { ...variable, selected: false }
       })
     };
     setSelectedVariableService(service);
   };
 
   const addToCart = () => {
-    setStepOneCart(prev=>prev+(selectedVariableService.variables.find(variable=>variable.selected)?.variableCutPrice || 0))
-    setServiceAddToCart({...selectedVariableService,incart:true});
-  } 
+    setStepOneCart(prev => ({
+      ...prev,
+      basePrice: prev.basePrice + (selectedVariableService.variables.find(variable => variable.selected)?.variablePrice || 0),
+      cutPrice: prev.cutPrice + (selectedVariableService.variables.find(variable => variable.selected)?.variableCutPrice || 0)
+    }))
+    setServiceAddToCart({ ...selectedVariableService, incart: true });
+  }
 
   return (
     <Sheet key={"bottom"} open={data.open} onOpenChange={(e) => {
@@ -70,12 +74,15 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
           <div className='text-base capitalize border shadow-lg rounded-lg text-start p-5 pt-2'>
             <span className='font-semibold text-gray-600'>{selectedService.variables && selectedService?.variables[0]?.variableType}</span>
             <div className='pt-3 flex flex-col gap-2'>
-              <RadioGroup onValueChange={(val)=>handlevariableChange(val)}>
+              <RadioGroup onValueChange={(val) => handlevariableChange(val)}>
                 {selectedService?.variables?.map(variable => (
                   <div key={variable.id} className="flex items-center  justify-between space-x-2">
                     <Label htmlFor={variable.id}>{variable.variableName}</Label>
                     <div className='flex gap-4 items-center'>
-                      + {currencyConverter(variable.variableCutPrice)}
+                      + <div>
+                        {variable.variableCutPrice != variable.variablePrice}<span className='line-through text-gray-600'>{currencyConverter(variable.variableCutPrice)}</span>
+                        <span className='pl-2'>{currencyConverter(variable.variablePrice)}</span>
+                      </div>
                       <RadioGroupItem value={variable.id} id={variable.id} />
                     </div>
                   </div>
@@ -83,12 +90,12 @@ const ServiceCategory = forwardRef<ServiceCategoryRefType>(({ }, ref) => {
               </RadioGroup>
             </div>
           </div>
-            <div className='flex justify-end pt-20 pb-5'>
-              <Button disabled={selectedVariableService.serviceTitle!=selectedService.serviceTitle} onClick={()=>{
-                addToCart();
-                setData({ ...data, open: false });
-              }}><Plus/> Add</Button>
-            </div>
+          <div className='flex justify-end pt-20 pb-5'>
+            <Button disabled={selectedVariableService.serviceTitle != selectedService.serviceTitle} onClick={() => {
+              addToCart();
+              setData({ ...data, open: false });
+            }}><Plus /> Add</Button>
+          </div>
         </SheetHeader>
       </SheetContent>
     </Sheet>

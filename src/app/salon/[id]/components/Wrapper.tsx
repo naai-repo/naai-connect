@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import MenIcon from "../../../../assets/images/men_icon.png"
 import WomenIcon from "../../../../assets/images/women_icon.png"
+import UnisexIcon from "../../../../assets/images/unisex.png"
 import AllArtistCarousel from './Artists/carouselWrapper'
 import Searchbar from '@/components/serviceComponents/Filter/FilterCategories'
 
@@ -59,13 +60,16 @@ const ServicesContent = () => {
 
   return (
     <>
-      <div className='flex justify-between gap-2 '>
+      <div className='flex justify-between gap-2 flex-col-reverse sm:flex-row'>
         <div className='flex gap-2'>
           <Button onClick={()=>{handleGenderFilter("male")}}  variant={selectedGender=="male"?"secondary":"outline"} size={"icon"} className='w-fit px-2'>
             Men <Image className="h-6 w-6" src={MenIcon} alt="women" />
           </Button>
           <Button onClick={()=>{handleGenderFilter("female")}} variant={selectedGender=="female"?"secondary":"outline"} size={"icon"} className='w-fit px-2'>
             Women <Image className="h-6 w-6" src={WomenIcon} alt="women" />
+          </Button>
+          <Button onClick={()=>{handleGenderFilter("unisex")}} variant={selectedGender=="unisex"?"secondary":"outline"} size={"icon"} className='w-fit px-2'>
+            Unisex <Image className="h-6 w-6" src={UnisexIcon} alt="unisex" />
           </Button>
         </div>
         <Searchbar />

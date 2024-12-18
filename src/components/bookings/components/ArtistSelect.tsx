@@ -1,5 +1,6 @@
 import MenIcon from "@/assets/images/men_icon.png";
 import WomenIcon from "@/assets/images/women_icon.png";
+import UnisexIcon from "@/assets/images/unisex.png";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -110,7 +111,7 @@ const MultiServicemultiArtist = () => {
 
   const getArtistPrice = (artist: SingleSalonArtistDataType, serviceToAssing: SingleSalonServiceDataType) => {
     const service = artist.services.find((service) => service.serviceId == serviceToAssing.id);
-    const discount = serviceToAssing.cutPrice - (service?.cutPrice || 0);
+    const discount = serviceToAssing.basePrice - (service?.price || 0);
     return discount;
   }
 
@@ -154,7 +155,7 @@ const MultiServicemultiArtist = () => {
         <div key={service.id} className={cn('flex flex-col gap-2 py-2 px-5', ind != selectedServices.length - 1 && 'border-b')}>
           <div className="flex justify-between">
             <div className='flex items-center capitalize gap-2'>
-              <Image className='h-8' src={service.targetGender === "male" ? MenIcon : WomenIcon} alt={"Gender.png"} />
+              <Image className='h-8 w-8 rounded-full' src={service.targetGender === "male" ? MenIcon : service.targetGender === "female"? WomenIcon:UnisexIcon} alt={"Gender.png"} />
               {service.serviceTitle}
             </div>
             {service.variables.length > 0 ? currencyConverter(service.variables.find(variable => variable.selected)?.variableCutPrice ?? 0) : service.cutPrice}
