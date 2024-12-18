@@ -18,11 +18,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useSalonService } from '@/hooks/salon.hooks';
 import Searchbar from '@/components/serviceComponents/Filter/FilterCategories';
 import BookingWrapper from '@/components/bookings/BookingWrapper';
+import Image from 'next/image';
 
 const Page = () => {
   const params = useParams();
   const id = params?.id as string | null;
-  const artistId = localStorage.getItem("selectedArtist");
   const [selectedArtist,setSelctedArtist] = useRecoilState(ArtistByIdSelector);
   const salonData = useRecoilValue(singleSalonDataSelector);
   const bookingRef = useRef<BookingSheetType>(null);
@@ -36,7 +36,7 @@ const Page = () => {
   const getArtist = async () => {
       setLoading(true);
     try {
-      let res = await artistService.getArtistById(artistId as string);
+      let res = await artistService.getArtistById(id as string);
       setSelctedArtist(res.data?.data as SingleSalonArtistDataType);
     } catch (error:any) {
       console.error("Artist not found")
@@ -58,9 +58,12 @@ const Page = () => {
   }
 
   useEffect(()=>{
-    if(salonId) getSalon();
     if(id) getArtist();
   },[id])
+
+  useEffect(()=>{
+    if(selectedArtist) getSalon();
+  },[selectedArtist])
 
   return (
     <MainWrapper name="Salon" parentWrapper={{
@@ -76,7 +79,7 @@ const Page = () => {
             <div className="flex items-center w-full gap-4">
               <div className="flex items-center justify-start w-fit flex-1">
                 {selectedArtist?.imageUrl?.length > 0 ? <img src={selectedArtist?.imageUrl} alt={".png"} className='min-w-24 min-h-24 rounded-full shadow-xl p-[1px]' /> :
-                  <img src={Profile} alt='.png' className='min-w-24 min-h-24 rounded-full shadow-2xl p-[1px]' />}
+                  <Image src={Profile} alt='.png' className='min-w-24 min-h-24 rounded-full shadow-2xl p-[1px]' />}
               </div>
               <div className="text-left flex justify-between w-full capitalize">
                 <div className="w-full">
